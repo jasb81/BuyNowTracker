@@ -27,6 +27,7 @@ namespace BuyNowTracker
 
         User usr = new User();
         string Token = string.Empty;
+        bool isTimerStart = false;
           
         public TaskList(User u,string token)
         {
@@ -51,7 +52,10 @@ namespace BuyNowTracker
 
 
                 UserTask usr = LstUser.Find(r => r.id == (int)grdTaskList.Rows[e.RowIndex].Cells["id"].Value);
-                frmTracker td = new frmTracker();
+
+                StartTimer(usr.id);
+
+                frmTracker td = new frmTracker(usr);
                 td.Show();
                 this.Hide();
             }
@@ -59,6 +63,35 @@ namespace BuyNowTracker
             {
                 logger.Error(ex.Message);
             }
+        }
+
+
+        private async void StartTimer(int taskId)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            // client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Token);
+
+            var values = new Dictionary<string, string>
+                {
+                   { "action", "starttimer" },
+
+                   { "taskid",  taskId.ToString() }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+            isTimerStart = true;
         }
 
         public async void ReadTasks(int userId)

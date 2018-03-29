@@ -48,7 +48,7 @@
             this.label1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.label1.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
-            this.label1.Location = new System.Drawing.Point(11, 53);
+            this.label1.Location = new System.Drawing.Point(12, 80);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(86, 16);
             this.label1.TabIndex = 4;
@@ -86,7 +86,7 @@
             this.grdTaskList.DefaultCellStyle = dataGridViewCellStyle3;
             this.grdTaskList.EnableHeadersVisualStyles = false;
             this.grdTaskList.GridColor = System.Drawing.Color.White;
-            this.grdTaskList.Location = new System.Drawing.Point(12, 82);
+            this.grdTaskList.Location = new System.Drawing.Point(12, 109);
             this.grdTaskList.Name = "grdTaskList";
             this.grdTaskList.ReadOnly = true;
             this.grdTaskList.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -109,7 +109,7 @@
             this.label2.BackColor = System.Drawing.Color.Transparent;
             this.label2.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
-            this.label2.Location = new System.Drawing.Point(8, 24);
+            this.label2.Location = new System.Drawing.Point(9, 51);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(93, 23);
             this.label2.TabIndex = 5;
@@ -131,7 +131,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(465, 391);
+            this.ClientSize = new System.Drawing.Size(465, 412);
             this.ControlBox = false;
             this.Controls.Add(this.picCross);
             this.Controls.Add(this.label1);

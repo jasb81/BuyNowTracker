@@ -36,8 +36,11 @@ namespace BuyNowTracker
 
         List<Idltime> randomTime = new List<Idltime>();
 
-        public frmTracker()
+        UserTask taskObj = null;
+
+        public frmTracker(UserTask tsk)
         {
+            taskObj = tsk;
             InitializeComponent();
         }
 

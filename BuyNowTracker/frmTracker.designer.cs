@@ -219,6 +219,7 @@
             this.btnStopTimer.TabIndex = 6;
             this.btnStopTimer.Text = "Stop Timer";
             this.btnStopTimer.UseVisualStyleBackColor = false;
+            this.btnStopTimer.Click += new System.EventHandler(this.btnEnd_Click);
             // 
             // txtMemo
             // 
