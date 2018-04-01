@@ -51,11 +51,11 @@ namespace BuyNowTracker
                     return;
 
 
-                UserTask usr = LstUser.Find(r => r.id == (int)grdTaskList.Rows[e.RowIndex].Cells["id"].Value);
+                UserTask usrTsk = LstUser.Find(r => r.id == (int)grdTaskList.Rows[e.RowIndex].Cells["id"].Value);
 
-                StartTimer(usr.id);
+                StartTimer(usrTsk.id);
 
-                frmTracker td = new frmTracker(usr);
+                frmTracker td = new frmTracker(usrTsk, usr, Token);
                 td.Show();
                 this.Hide();
             }
@@ -74,7 +74,7 @@ namespace BuyNowTracker
 
             var client = new HttpClient();
 
-            // client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Token);
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + Token);
 
             var values = new Dictionary<string, string>
                 {

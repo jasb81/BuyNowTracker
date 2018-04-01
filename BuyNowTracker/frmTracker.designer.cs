@@ -61,7 +61,7 @@
             this.lblUserName = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.picCross = new System.Windows.Forms.PictureBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.imgBack = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.lblDescription = new System.Windows.Forms.Label();
             this.lblTaskTltle = new System.Windows.Forms.Label();
@@ -79,7 +79,7 @@
             this.lblSecond = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picCross)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgBack)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -100,7 +100,7 @@
             // panel1
             // 
             this.panel1.Controls.Add(this.picCross);
-            this.panel1.Controls.Add(this.pictureBox1);
+            this.panel1.Controls.Add(this.imgBack);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.lblDescription);
             this.panel1.Controls.Add(this.lblTaskTltle);
@@ -114,20 +114,22 @@
             // picCross
             // 
             this.picCross.Image = ((System.Drawing.Image)(resources.GetObject("picCross.Image")));
-            this.picCross.Location = new System.Drawing.Point(352, 7);
+            this.picCross.Location = new System.Drawing.Point(357, 5);
             this.picCross.Name = "picCross";
-            this.picCross.Size = new System.Drawing.Size(28, 22);
+            this.picCross.Size = new System.Drawing.Size(22, 22);
             this.picCross.TabIndex = 8;
             this.picCross.TabStop = false;
             this.picCross.Click += new System.EventHandler(this.picCross_Click);
             // 
-            // pictureBox1
+            // imgBack
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(341, 75);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(33, 31);
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
+            this.imgBack.Image = ((System.Drawing.Image)(resources.GetObject("imgBack.Image")));
+            this.imgBack.Location = new System.Drawing.Point(341, 75);
+            this.imgBack.Name = "imgBack";
+            this.imgBack.Size = new System.Drawing.Size(33, 26);
+            this.imgBack.TabIndex = 4;
+            this.imgBack.TabStop = false;
+            this.imgBack.Click += new System.EventHandler(this.imgBack_Click);
             // 
             // label2
             // 
@@ -274,6 +276,7 @@
             this.btnMemo.TabIndex = 11;
             this.btnMemo.Text = "Add Memo";
             this.btnMemo.UseVisualStyleBackColor = false;
+            this.btnMemo.Click += new System.EventHandler(this.btnMemo_Click);
             // 
             // lblSS
             // 
@@ -293,7 +296,7 @@
             this.lblSecond.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblSecond.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSecond.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-            this.lblSecond.Location = new System.Drawing.Point(149, 191);
+            this.lblSecond.Location = new System.Drawing.Point(151, 192);
             this.lblSecond.Name = "lblSecond";
             this.lblSecond.Size = new System.Drawing.Size(51, 39);
             this.lblSecond.TabIndex = 13;
@@ -327,7 +330,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picCross)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgBack)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -353,7 +356,7 @@
         private System.Windows.Forms.Label lblWeekHour;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnMemo;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox imgBack;
         private System.Windows.Forms.PictureBox picCross;
         private System.Windows.Forms.Label lblSS;
         private System.Windows.Forms.Label lblSecond;

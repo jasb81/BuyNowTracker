@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BuyNowTrackerBIZ;
 using System.Globalization;
+using System.Net;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace BuyNowTracker
 {
@@ -30,6 +34,7 @@ namespace BuyNowTracker
         private DateTime endTime;
 
         private static int elapseTime = 0;
+
         private static int elapseindex = 0;
 
         private string buttonText;
@@ -38,9 +43,16 @@ namespace BuyNowTracker
 
         UserTask taskObj = null;
 
-        public frmTracker(UserTask tsk)
+        User usrTracker = null;
+
+        string _token = string.Empty;
+
+        public frmTracker(UserTask tsk, User usr, string token)
         {
             taskObj = tsk;
+            usrTracker = usr;
+            _token = token;
+
             InitializeComponent();
         }
 
@@ -231,6 +243,7 @@ namespace BuyNowTracker
 
         private void btnEnd_Click(object sender, EventArgs e)
         {
+            EndTimer(taskObj.id);
             timer1.Enabled = false;
             timer1.Stop();
         }
@@ -252,6 +265,49 @@ namespace BuyNowTracker
         {
 
         }
+
+        private void btnMemo_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void imgBack_Click(object sender, EventArgs e)
+        {
+            TaskList lst = new TaskList(usrTracker, _token);
+            lst.Show();
+            this.Hide();
+        }
+
+        private async void EndTimer(int taskId)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + _token);
+
+            var values = new Dictionary<string, string>
+                {
+                   { "action", "stoptimer" },
+
+                   { "taskid",  taskId.ToString() }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+
+           
+        }
+
+
     }
 
     public class Idltime
