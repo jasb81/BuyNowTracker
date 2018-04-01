@@ -244,6 +244,7 @@ namespace BuyNowTracker
         private void btnEnd_Click(object sender, EventArgs e)
         {
             EndTimer(taskObj.id);
+
             timer1.Enabled = false;
             timer1.Stop();
         }
@@ -261,19 +262,20 @@ namespace BuyNowTracker
         }
 
 
-        private void picCross_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnMemo_Click(object sender, EventArgs e)
         {
-
+            AddMemo(taskObj.id);
         }
 
         private void imgBack_Click(object sender, EventArgs e)
         {
+            EndTimer(taskObj.id);
+
             TaskList lst = new TaskList(usrTracker, _token);
+
+            timer1.Enabled = false;
+            timer1.Stop();
+
             lst.Show();
             this.Hide();
         }
@@ -302,13 +304,42 @@ namespace BuyNowTracker
             var responseString = await message.Content.ReadAsStringAsync();
 
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
-
-
            
+        }
+
+        private async void AddMemo(int taskId)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + _token);
+
+            var values = new Dictionary<string, string>
+                {
+                   { "action", "savememo" },
+
+                   { "taskid",  taskId.ToString() }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+
+
         }
 
 
     }
+
+
 
     public class Idltime
     {

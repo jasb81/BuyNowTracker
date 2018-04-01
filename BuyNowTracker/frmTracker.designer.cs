@@ -119,7 +119,7 @@
             this.picCross.Size = new System.Drawing.Size(22, 22);
             this.picCross.TabIndex = 8;
             this.picCross.TabStop = false;
-            this.picCross.Click += new System.EventHandler(this.picCross_Click);
+            this.picCross.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // imgBack
             // 
