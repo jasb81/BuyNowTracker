@@ -28,7 +28,9 @@ namespace BuyNowTracker
         User usr = new User();
         string Token = string.Empty;
         bool isTimerStart = false;
-          
+        int logActivityId = 0;
+        UserTask usrTsk;
+
         public TaskList(User u,string token)
         {
             Token = token;
@@ -51,13 +53,10 @@ namespace BuyNowTracker
                     return;
 
 
-                UserTask usrTsk = LstUser.Find(r => r.id == (int)grdTaskList.Rows[e.RowIndex].Cells["id"].Value);
+                 usrTsk = LstUser.Find(r => r.id == (int)grdTaskList.Rows[e.RowIndex].Cells["id"].Value);
 
                 StartTimer(usrTsk.id);
 
-                frmTracker td = new frmTracker(usrTsk, usr, Token);
-                td.Show();
-                this.Hide();
             }
             catch (Exception ex)
             {
@@ -91,7 +90,17 @@ namespace BuyNowTracker
 
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
-            isTimerStart = true;
+            if(j["result"].ToString().ToLower() == "success")
+            {
+                isTimerStart = true;
+                logActivityId =  Convert.ToInt32(j["data"]);
+
+                frmTracker td = new frmTracker(usrTsk, usr, Token, logActivityId);
+                td.Show();
+                this.Hide();
+
+
+            }
         }
 
         public async void ReadTasks(int userId)
@@ -103,8 +112,6 @@ namespace BuyNowTracker
                 string jsonString = string.Empty;
 
                 var client = new HttpClient();
-
-               // client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue(Token);
 
                 var values = new Dictionary<string, string>
                 { 
@@ -169,7 +176,7 @@ namespace BuyNowTracker
                 grdTaskList.Columns[2].Visible = false;
                 grdTaskList.Columns.Add(buttonColumn);
                 grdTaskList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-                grdTaskList.Columns[1].Width = 336;
+                grdTaskList.Columns[1].Width = 320;
 
             }
             catch (Exception ex)
@@ -182,6 +189,8 @@ namespace BuyNowTracker
         {
             
             Current = this;
+
+            lblName.Text = usr.name;
 
             ReadTasks((int)usr.uid);            
         }

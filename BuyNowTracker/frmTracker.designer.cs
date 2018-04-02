@@ -93,9 +93,8 @@
             this.lblUserName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
             this.lblUserName.Location = new System.Drawing.Point(5, 33);
             this.lblUserName.Name = "lblUserName";
-            this.lblUserName.Size = new System.Drawing.Size(126, 25);
+            this.lblUserName.Size = new System.Drawing.Size(0, 25);
             this.lblUserName.TabIndex = 0;
-            this.lblUserName.Text = "Jasbir Singh";
             // 
             // panel1
             // 

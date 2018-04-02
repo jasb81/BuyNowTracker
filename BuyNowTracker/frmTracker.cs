@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace BuyNowTracker
 {
@@ -46,12 +47,14 @@ namespace BuyNowTracker
         User usrTracker = null;
 
         string _token = string.Empty;
+        int _logActivityId;
 
-        public frmTracker(UserTask tsk, User usr, string token)
+        public frmTracker(UserTask tsk, User usr, string token,int logActivityId)
         {
             taskObj = tsk;
             usrTracker = usr;
             _token = token;
+            _logActivityId = logActivityId;
 
             InitializeComponent();
         }
@@ -63,6 +66,10 @@ namespace BuyNowTracker
             //lblStartTimer.Text = "Start Time " + startTime.ToString("dd-MMM-yyyy hh:mm tt");
 
             log.Info("Initializing Classess...");
+
+            lblTaskTltle.Text = taskObj.title;
+            lblDescription.Text = taskObj.description;
+            lblUserName.Text = usrTracker.name;
 
             keyboard = new KeyboardInput();
 
@@ -151,7 +158,12 @@ namespace BuyNowTracker
                 if (dtSecond > startTime)
                 {
                     log.Error("Get Execution time");
-                    ScreenCapture.SaveScreen();
+
+                    MemoryStream stream =  ScreenCapture.SaveScreen();
+
+                    //SaveScreenShot(stream);
+                    
+
                     log.Info("save screen ");
 
 
@@ -280,6 +292,48 @@ namespace BuyNowTracker
             this.Hide();
         }
 
+        private async void SaveScreenShot(MemoryStream stream)
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            using (var content = new MultipartFormDataContent())
+            {
+
+               
+                var values = new Dictionary<string, string>
+                        {
+                           { "action", "savescreenshot" },
+                           { "timerid",  _logActivityId.ToString() }
+                        };
+
+                var stringContent = new StringContent(JsonConvert.SerializeObject(values));
+                stringContent.Headers.Add("Content-Disposition", "form-data; name=\"json\"");
+                content.Add(stringContent, "json");
+
+                var streamContent = new StreamContent(stream);
+                streamContent.Headers.Add("Content-Type", "application/octet-stream");
+                string flName = _logActivityId.ToString() + "_" + DateTime.Now.ToLongDateString() + ".png";
+                streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + flName + "\"");
+                content.Add(streamContent, "savescreenshot", flName);
+
+
+
+                client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + _token);
+
+                HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+                var responseString = await message.Content.ReadAsStringAsync();
+
+                JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+            }
+
+
+        }
+
         private async void EndTimer(int taskId)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -304,6 +358,11 @@ namespace BuyNowTracker
             var responseString = await message.Content.ReadAsStringAsync();
 
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+            if(j["result"].ToString().ToLower() == "success")
+            {
+
+            }
            
         }
 
@@ -332,11 +391,12 @@ namespace BuyNowTracker
 
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
+            if (j["result"].ToString().ToLower() == "success")
+            {
 
+            }
 
         }
-
-
     }
 
 
