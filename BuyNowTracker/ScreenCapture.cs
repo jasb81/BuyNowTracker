@@ -11,7 +11,7 @@ namespace BuyNowTracker
 {
     public class ScreenCapture
     {
-        public static MemoryStream SaveScreen()
+        public static byte[] SaveScreen()
         {
 
             Bitmap memoryImage;
@@ -19,7 +19,7 @@ namespace BuyNowTracker
             try
             {
 
-                memoryImage = new Bitmap(1000, 900);
+                memoryImage = new Bitmap(1000, 900); //1000,900
 
                 Size s = new Size(memoryImage.Width, memoryImage.Height);
 
@@ -39,13 +39,15 @@ namespace BuyNowTracker
 
                 //  memoryImage.Save(folderPath + @"\" + flname + ".png");
 
+                
+
                 MemoryStream memStream = new MemoryStream();
 
                 memoryImage.Save(memStream, System.Drawing.Imaging.ImageFormat.Jpeg);
 
                 memoryImage.Dispose();
 
-                return memStream;
+                return memStream.ToArray();
 
             }
             catch (Exception ex)

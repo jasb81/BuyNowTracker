@@ -14,6 +14,7 @@ using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.IO;
+using System.Net.Http.Headers;
 
 namespace BuyNowTracker
 {
@@ -138,7 +139,7 @@ namespace BuyNowTracker
 
                 DateTime dtSecond = DateTime.Now;
 
-                log.Info("Get time 2");
+              //  log.Info("Get time 2");
                 TimeSpan tmHours = startTime.TimeOfDay;
 
                 TimeSpan timeDifference = startTime.Subtract(dtSecond);//minutes2.TotalMinutes - minutes1.TotalMinutes;
@@ -157,20 +158,19 @@ namespace BuyNowTracker
                 log.Info(dtSecond.ToString() + "-" + startTime.ToString() + "-" + elapseTime.ToString());
                 if (dtSecond > startTime)
                 {
-                    log.Error("Get Execution time");
+                    //log.Error("Get Execution time");
 
-                    MemoryStream stream =  ScreenCapture.SaveScreen();
+                    byte[]  bytes =  ScreenCapture.SaveScreen();
 
-                    //SaveScreenShot(stream);
-                    
+                    SaveScreenShot(bytes);
 
-                    log.Info("save screen ");
+
+                  //  LogActivity();
+
+                    //log.Info("save screen ");
 
 
                     endTime = DateTime.Now;
-
-
-                    //lblTest.Text = buttonText + "   " + endTime.ToString("hh:mm tt");
 
                     int _arrIndex = randomTime.FindIndex(a => a.Id == elapseindex);
 
@@ -193,69 +193,18 @@ namespace BuyNowTracker
                 else
                 {
                     log.Info("Time difference is less then ellapse time");
-                }
-
-
-
-                //if (isFirstTick)
-                //{
-                //    isFirstTick = false;
-                //    screenCapureTime = startTime;
-                //}
-
-                //TimeSpan prevCaptureTime = new TimeSpan(0, screenCapureTime.Minute, screenCapureTime.Second);
-
-                //TimeSpan currentCaptureTime = new TimeSpan(0, DateTime.Now.Minute, DateTime.Now.Second);
-
-                //double captureTimeDifference = currentCaptureTime.TotalMinutes - prevCaptureTime.TotalMinutes;
-
-                //if (Math.Round(captureTimeDifference) == Convert.ToDouble(5))
-                //{
-                //    log.Info("Screen shots captured...");
-                //    screenCapureTime = DateTime.Now;
-
-                //    ScreenCapture.SaveScreen();
-                //}
-
-                //TimeSpan minutes1 = new TimeSpan(0, lastInput.GetLastInputTime().Minute, lastInput.GetLastInputTime().Second);
-
-                //TimeSpan minutes2 = new TimeSpan(0, DateTime.Now.Minute, DateTime.Now.Second);
-
-                //double timeDifference = minutes2.TotalMinutes - minutes1.TotalMinutes;
-
-                ////lblHours.Text = DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt");
-
-                ////  lblTime.Text = Math.Round(timeDifference).ToString();
-
-                //if (Math.Round(timeDifference) >= Convert.ToDouble(5))
-                //{
-
-                //    log.Info("Timer stops due to idle time");
-                //    endTime = DateTime.Now;
-
-                //    //lblEndTimer.Text = "End Time " + (endTime - startTime).ToString();
-
-                //    timer1.Enabled = false;
-
-                //    timer1.Stop();
-                //}
+                }        
             }
             catch (Exception ex)
             {
                 log.Error(ex);
             }
-
         }
 
-        private void btnStart_Click(object sender, EventArgs e)
-        {
-            timer1.Enabled = true;
-            timer1.Start();
-        }
-
+       
         private void btnEnd_Click(object sender, EventArgs e)
         {
-            EndTimer(taskObj.id);
+            EndTimer(taskObj.id, false);
 
             timer1.Enabled = false;
             timer1.Stop();
@@ -275,13 +224,13 @@ namespace BuyNowTracker
 
 
         private void btnMemo_Click(object sender, EventArgs e)
-        {
+        {            
             AddMemo(taskObj.id);
         }
 
         private void imgBack_Click(object sender, EventArgs e)
         {
-            EndTimer(taskObj.id);
+            EndTimer(taskObj.id, true);
 
             TaskList lst = new TaskList(usrTracker, _token);
 
@@ -292,49 +241,45 @@ namespace BuyNowTracker
             this.Hide();
         }
 
-        private async void SaveScreenShot(MemoryStream stream)
+        private async void SaveScreenShot(byte[]  bytes)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             string jsonString = string.Empty;
 
             var client = new HttpClient();
-
-            using (var content = new MultipartFormDataContent())
+           
+            var values = new Dictionary<string, string>
             {
-
+                {"screenshot", Convert.ToBase64String(bytes)}
+            };
                
-                var values = new Dictionary<string, string>
-                        {
-                           { "action", "savescreenshot" },
-                           { "timerid",  _logActivityId.ToString() }
-                        };
+            var str = JsonConvert.SerializeObject(values);
 
-                var stringContent = new StringContent(JsonConvert.SerializeObject(values));
-                stringContent.Headers.Add("Content-Disposition", "form-data; name=\"json\"");
-                content.Add(stringContent, "json");
+            var content = new StringContent(str, Encoding.UTF8, "application/json");
 
-                var streamContent = new StreamContent(stream);
-                streamContent.Headers.Add("Content-Type", "application/octet-stream");
-                string flName = _logActivityId.ToString() + "_" + DateTime.Now.ToLongDateString() + ".png";
-                streamContent.Headers.Add("Content-Disposition", "form-data; name=\"file\"; filename=\"" + flName + "\"");
-                content.Add(streamContent, "savescreenshot", flName);
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + _token);
 
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php?action=savescreenshot&timerid=" + _logActivityId, content);
 
+            var responseString = await message.Content.ReadAsStringAsync();
 
-                client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + _token);
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
-                HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+            if(j["result"].ToString().ToLower() == "success")
+            {
+                MessageBox.Show("Screen shot saved", "Info", MessageBoxButtons.OK);
 
-                var responseString = await message.Content.ReadAsStringAsync();
-
-                JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
             }
-
-
+            else
+            {
+                MessageBox.Show(j["messages"][0].ToString(),"Error", MessageBoxButtons.OK);
+            }
+          
         }
 
-        private async void EndTimer(int taskId)
+        
+        private async void EndTimer(int taskId,bool isBack)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
@@ -359,9 +304,16 @@ namespace BuyNowTracker
 
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
-            if(j["result"].ToString().ToLower() == "success")
+            if (!isBack)
             {
-
+                if (j["result"].ToString().ToLower() == "success")
+                {
+                    MessageBox.Show("Timer stopped!", "Info", MessageBoxButtons.OK);
+                }
+                else
+                {
+                    MessageBox.Show(j["message"].ToString(), "Error", MessageBoxButtons.OK);
+                }
             }
            
         }
@@ -393,12 +345,50 @@ namespace BuyNowTracker
 
             if (j["result"].ToString().ToLower() == "success")
             {
+                MessageBox.Show("Memo added", "Info", MessageBoxButtons.OK);
+            }
+            else
+            {
+                MessageBox.Show(j["message"].ToString(), "Error", MessageBoxButtons.OK);
+            }
+
+        }
+
+        private async void LogActivity()
+        {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + _token);
+
+            var values = new Dictionary<string, string>
+                {
+                   { "action", "logactivity" },
+
+                   { "taskid",  _logActivityId.ToString() },
+
+                   { "stats",  buttonText}
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+            if (j["result"].ToString().ToLower() == "success")
+            {
 
             }
 
         }
-    }
 
+    }
 
 
     public class Idltime

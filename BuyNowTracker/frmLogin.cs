@@ -152,11 +152,11 @@ namespace BuyNowTracker
 
             JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
 
-            if (obj != null)
+            if (obj != null && obj["result"].ToString().ToLower() == "success")
             {
                 if (obj["_token"].ToString() != string.Empty)
                 {
-                     token = obj["_token"].ToString();
+                    token = obj["_token"].ToString();
 
                     var jwtHandler = new JwtSecurityTokenHandler();
 
@@ -186,7 +186,7 @@ namespace BuyNowTracker
                 }
             }
             else
-                lblStatus.Text = "Email or password invalid";
+                lblStatus.Text = obj["messages"][0].ToString();
 
 
             if (jsonString != string.Empty)
@@ -220,7 +220,5 @@ namespace BuyNowTracker
             return isValid;
         }
 
-    }
-
-   
+    } 
 }
