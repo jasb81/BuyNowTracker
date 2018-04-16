@@ -232,6 +232,7 @@ namespace BuyNowTracker
                 System.Environment.Exit(1);
             }
         }
+ 
     }
 
     public class UserTask

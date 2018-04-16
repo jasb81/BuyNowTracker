@@ -90,7 +90,7 @@ namespace BuyNowTracker
             this.grdTaskList.DefaultCellStyle = dataGridViewCellStyle3;
             this.grdTaskList.EnableHeadersVisualStyles = false;
             this.grdTaskList.GridColor = System.Drawing.Color.White;
-            this.grdTaskList.Location = new System.Drawing.Point(12, 144);
+            this.grdTaskList.Location = new System.Drawing.Point(12, 142);
             this.grdTaskList.Name = "grdTaskList";
             this.grdTaskList.ReadOnly = true;
             this.grdTaskList.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
@@ -103,7 +103,7 @@ namespace BuyNowTracker
             this.grdTaskList.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.grdTaskList.RowHeadersVisible = false;
             this.grdTaskList.RowTemplate.Height = 34;
-            this.grdTaskList.Size = new System.Drawing.Size(443, 305);
+            this.grdTaskList.Size = new System.Drawing.Size(443, 292);
             this.grdTaskList.TabIndex = 6;
             // 
             // picCross
@@ -142,7 +142,7 @@ namespace BuyNowTracker
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(468, 465);
+            this.ClientSize = new System.Drawing.Size(468, 445);
             this.ControlBox = false;
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.picCross);
