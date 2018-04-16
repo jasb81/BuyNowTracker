@@ -67,6 +67,8 @@ namespace BuyNowTracker
 
         private async void StartTimer(int taskId)
         {
+            this.Cursor = Cursors.WaitCursor;
+
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             string jsonString = string.Empty;
@@ -88,6 +90,8 @@ namespace BuyNowTracker
 
             var responseString = await message.Content.ReadAsStringAsync();
 
+            this.Cursor = Cursors.Default;
+
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
             if(j["result"].ToString().ToLower() == "success")
@@ -107,11 +111,17 @@ namespace BuyNowTracker
         {
             try
             {
+
+                this.Cursor = Cursors.Default;
+
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
                 string jsonString = string.Empty;
 
                 var client = new HttpClient();
+
+                client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + Token);
+
 
                 var values = new Dictionary<string, string>
                 { 
@@ -127,6 +137,8 @@ namespace BuyNowTracker
                 var responseString = await message.Content.ReadAsStringAsync();
 
                 JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+                this.Cursor = Cursors.Default;
 
                 for (int i = 0; i < ((Newtonsoft.Json.Linq.JContainer)(j["data"])).Count; i++)
                 {
@@ -156,15 +168,15 @@ namespace BuyNowTracker
                 grdTaskList.DataSource = LstUser; DataGridViewButtonColumn buttonColumn =
                  new DataGridViewButtonColumn();
 
-                buttonColumn.HeaderText = "";
                 buttonColumn.Name = "Starttask";
                 buttonColumn.Text = "Start Task";
+
                 buttonColumn.FlatStyle = FlatStyle.Flat;
                 buttonColumn.CellTemplate.Style.BackColor = Color.Orange;
                 buttonColumn.CellTemplate.Style.ForeColor = Color.White;
                 buttonColumn.CellTemplate.Style.SelectionBackColor = Color.Orange;
                 buttonColumn.CellTemplate.Style.SelectionForeColor = Color.White;
-                buttonColumn.HeaderCell.Style.BackColor = Color.Silver;
+                buttonColumn.HeaderCell.Style.BackColor = Color.Orange;
                 buttonColumn.CellTemplate.Style.Font = new Font(DataGridView.DefaultFont, FontStyle.Bold);
                 buttonColumn.UseColumnTextForButtonValue = true;
 
@@ -176,7 +188,21 @@ namespace BuyNowTracker
                 grdTaskList.Columns[2].Visible = false;
                 grdTaskList.Columns.Add(buttonColumn);
                 grdTaskList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-                grdTaskList.Columns[1].Width = 320;
+                grdTaskList.Columns[1].Width = 340;
+                grdTaskList.ColumnHeadersVisible = false;
+
+
+                grdTaskList.BorderStyle = BorderStyle.None;
+                //grdTaskList.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
+                grdTaskList.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+               // grdTaskList.DefaultCellStyle.SelectionBackColor = Color.;
+                //grdTaskList.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
+                grdTaskList.BackgroundColor = Color.White;
+
+                grdTaskList.EnableHeadersVisualStyles = false;
+                grdTaskList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+                grdTaskList.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
+                grdTaskList.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
 
             }
             catch (Exception ex)
@@ -197,7 +223,14 @@ namespace BuyNowTracker
 
         private void picCross_Click(object sender, EventArgs e)
         {
-            this.Close();
+            DialogResult dialog = new DialogResult();
+
+            dialog = MessageBox.Show("Do you want to exit?", "Confirm", MessageBoxButtons.YesNo);
+
+            if (dialog == DialogResult.Yes)
+            {
+                System.Environment.Exit(1);
+            }
         }
     }
 

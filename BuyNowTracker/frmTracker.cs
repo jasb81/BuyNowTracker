@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using BuyNowTrackerBIZ;
 using System.Globalization;
@@ -13,8 +8,6 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using System.IO;
-using System.Net.Http.Headers;
 
 namespace BuyNowTracker
 {
@@ -40,6 +33,8 @@ namespace BuyNowTracker
         private static int elapseindex = 0;
 
         private string buttonText;
+        private static int keyInputCount = 0;
+        private static int mouseInputCount = 0;
 
         List<Idltime> randomTime = new List<Idltime>();
 
@@ -56,6 +51,8 @@ namespace BuyNowTracker
             usrTracker = usr;
             _token = token;
             _logActivityId = logActivityId;
+
+            mouseInputCount=keyInputCount = 0;
 
             InitializeComponent();
         }
@@ -113,6 +110,7 @@ namespace BuyNowTracker
             try
             {
                 buttonText = sender.ToString();
+                keyInputCount = keyInputCount + 1;
             }
             catch (Exception ex)
             {
@@ -129,6 +127,7 @@ namespace BuyNowTracker
         void mouse_MouseMoved(object sender, EventArgs e)
         {
             buttonText = sender.ToString();
+            mouseInputCount = mouseInputCount + 1;
         }
 
 
@@ -155,7 +154,7 @@ namespace BuyNowTracker
 
                 timeCount++;
 
-                log.Info(dtSecond.ToString() + "-" + startTime.ToString() + "-" + elapseTime.ToString());
+               // log.Info(dtSecond.ToString() + "-" + startTime.ToString() + "-" + elapseTime.ToString());
                 if (dtSecond > startTime)
                 {
                     //log.Error("Get Execution time");
@@ -164,15 +163,14 @@ namespace BuyNowTracker
 
                     SaveScreenShot(bytes);
 
-
-                  //  LogActivity();
-
                     //log.Info("save screen ");
 
 
                     endTime = DateTime.Now;
 
                     int _arrIndex = randomTime.FindIndex(a => a.Id == elapseindex);
+
+                    LogActivity();
 
                     if (_arrIndex < randomTime.Count - 1)
                     {
@@ -204,7 +202,9 @@ namespace BuyNowTracker
        
         private void btnEnd_Click(object sender, EventArgs e)
         {
-            EndTimer(taskObj.id, false);
+            mouseInputCount = keyInputCount = 0;
+
+            EndTimer(false);
 
             timer1.Enabled = false;
             timer1.Stop();
@@ -230,7 +230,7 @@ namespace BuyNowTracker
 
         private void imgBack_Click(object sender, EventArgs e)
         {
-            EndTimer(taskObj.id, true);
+            EndTimer(true);
 
             TaskList lst = new TaskList(usrTracker, _token);
 
@@ -243,6 +243,8 @@ namespace BuyNowTracker
 
         private async void SaveScreenShot(byte[]  bytes)
         {
+            this.Cursor = Cursors.WaitCursor;
+
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             string jsonString = string.Empty;
@@ -264,11 +266,13 @@ namespace BuyNowTracker
 
             var responseString = await message.Content.ReadAsStringAsync();
 
+            this.Cursor = Cursors.Default;
+
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
             if(j["result"].ToString().ToLower() == "success")
             {
-                MessageBox.Show("Screen shot saved", "Info", MessageBoxButtons.OK);
+               // MessageBox.Show("Screen shot saved", "Info", MessageBoxButtons.OK);
 
             }
             else
@@ -279,8 +283,10 @@ namespace BuyNowTracker
         }
 
         
-        private async void EndTimer(int taskId,bool isBack)
+        private async void EndTimer(bool isBack)
         {
+            this.Cursor = Cursors.WaitCursor;
+
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             string jsonString = string.Empty;
@@ -293,7 +299,7 @@ namespace BuyNowTracker
                 {
                    { "action", "stoptimer" },
 
-                   { "taskid",  taskId.ToString() }
+                   { "timerid",  _logActivityId.ToString() }
                 };
 
             var content = new FormUrlEncodedContent(values);
@@ -301,6 +307,8 @@ namespace BuyNowTracker
             HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
 
             var responseString = await message.Content.ReadAsStringAsync();
+
+            this.Cursor = Cursors.Default;
 
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
@@ -320,6 +328,9 @@ namespace BuyNowTracker
 
         private async void AddMemo(int taskId)
         {
+
+            this.Cursor = Cursors.WaitCursor;
+
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             string jsonString = string.Empty;
@@ -332,7 +343,9 @@ namespace BuyNowTracker
                 {
                    { "action", "savememo" },
 
-                   { "taskid",  taskId.ToString() }
+                   { "timerid",  _logActivityId.ToString() },
+
+                   {"memo",  txtMemo.Text}
                 };
 
             var content = new FormUrlEncodedContent(values);
@@ -340,6 +353,8 @@ namespace BuyNowTracker
             HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
 
             var responseString = await message.Content.ReadAsStringAsync();
+
+            this.Cursor = Cursors.Default;
 
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
@@ -356,6 +371,13 @@ namespace BuyNowTracker
 
         private async void LogActivity()
         {
+            this.Cursor = Cursors.WaitCursor;
+
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+            dic.Add("MouseCount", mouseInputCount);
+            dic.Add("KeyStrokeCount", keyInputCount);
+
+             
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             string jsonString = string.Empty;
@@ -368,9 +390,9 @@ namespace BuyNowTracker
                 {
                    { "action", "logactivity" },
 
-                   { "taskid",  _logActivityId.ToString() },
-
-                   { "stats",  buttonText}
+                   { "timerid",  _logActivityId.ToString() },
+                
+                   { "stats", JsonConvert.SerializeObject(dic) }
                 };
 
             var content = new FormUrlEncodedContent(values);
@@ -379,11 +401,28 @@ namespace BuyNowTracker
 
             var responseString = await message.Content.ReadAsStringAsync();
 
+            this.Cursor = Cursors.Default;
+
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
             if (j["result"].ToString().ToLower() == "success")
             {
 
+                mouseInputCount = keyInputCount = 0;
+               object value =  ((Newtonsoft.Json.Linq.JValue)(j["data"][0]["stoptimer"])).Value;
+
+                if(Convert.ToBoolean(value) == true)
+                {
+                    EndTimer(false);
+
+                    timer1.Enabled = false;
+                    timer1.Stop();
+
+                }
+            }
+            else
+            {
+                MessageBox.Show(j["message"].ToString(), "Error", MessageBoxButtons.OK);
             }
 
         }

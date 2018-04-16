@@ -130,12 +130,15 @@ namespace BuyNowTracker
 
         public async void LoginUser(string userName,string passowrd)
         {
+
             string jsonString = string.Empty;
             string token = string.Empty;
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             var client = new HttpClient();
+
+            this.Cursor = Cursors.WaitCursor;
 
             var values = new Dictionary<string, string>
             {
@@ -149,6 +152,8 @@ namespace BuyNowTracker
             HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
 
             var responseString = await message.Content.ReadAsStringAsync();
+
+            this.Cursor = Cursors.Default;
 
             JObject obj = (JObject)JsonConvert.DeserializeObject(responseString);
 
@@ -189,6 +194,7 @@ namespace BuyNowTracker
                 lblStatus.Text = obj["messages"][0].ToString();
 
 
+
             if (jsonString != string.Empty)
             {
                 User u = JsonConvert.DeserializeObject<User>(jsonString);
@@ -202,7 +208,7 @@ namespace BuyNowTracker
 
         private void btnClose_Click(object sender, EventArgs e)
         {
-            this.Close();
+            System.Environment.Exit(1);
         }
 
 

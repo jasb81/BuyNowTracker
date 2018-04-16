@@ -72,8 +72,6 @@
             this.btnStopTimer = new System.Windows.Forms.Button();
             this.txtMemo = new System.Windows.Forms.TextBox();
             this.lblMemo = new System.Windows.Forms.Label();
-            this.lblWeekHour = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.btnMemo = new System.Windows.Forms.Button();
             this.lblSS = new System.Windows.Forms.Label();
             this.lblSecond = new System.Windows.Forms.Label();
@@ -112,6 +110,7 @@
             // 
             // picCross
             // 
+            this.picCross.Cursor = System.Windows.Forms.Cursors.Hand;
             this.picCross.Image = ((System.Drawing.Image)(resources.GetObject("picCross.Image")));
             this.picCross.Location = new System.Drawing.Point(357, 5);
             this.picCross.Name = "picCross";
@@ -122,6 +121,7 @@
             // 
             // imgBack
             // 
+            this.imgBack.Cursor = System.Windows.Forms.Cursors.Hand;
             this.imgBack.Image = ((System.Drawing.Image)(resources.GetObject("imgBack.Image")));
             this.imgBack.Location = new System.Drawing.Point(341, 75);
             this.imgBack.Name = "imgBack";
@@ -153,7 +153,7 @@
             // 
             this.lblTaskTltle.AutoSize = true;
             this.lblTaskTltle.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTaskTltle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
+            this.lblTaskTltle.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.lblTaskTltle.Location = new System.Drawing.Point(5, 75);
             this.lblTaskTltle.Name = "lblTaskTltle";
             this.lblTaskTltle.Size = new System.Drawing.Size(85, 16);
@@ -165,7 +165,7 @@
             this.lblhh.AutoSize = true;
             this.lblhh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblhh.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblhh.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
+            this.lblhh.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.lblhh.Location = new System.Drawing.Point(18, 150);
             this.lblhh.Name = "lblhh";
             this.lblhh.Size = new System.Drawing.Size(53, 39);
@@ -177,7 +177,7 @@
             this.lblmm.AutoSize = true;
             this.lblmm.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblmm.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblmm.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
+            this.lblmm.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.lblmm.Location = new System.Drawing.Point(79, 150);
             this.lblmm.Name = "lblmm";
             this.lblmm.Size = new System.Drawing.Size(71, 39);
@@ -211,6 +211,7 @@
             // btnStopTimer
             // 
             this.btnStopTimer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.btnStopTimer.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnStopTimer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStopTimer.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStopTimer.ForeColor = System.Drawing.Color.White;
@@ -241,31 +242,10 @@
             this.lblMemo.TabIndex = 8;
             this.lblMemo.Text = "Working on";
             // 
-            // lblWeekHour
-            // 
-            this.lblWeekHour.AutoSize = true;
-            this.lblWeekHour.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblWeekHour.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
-            this.lblWeekHour.Location = new System.Drawing.Point(15, 389);
-            this.lblWeekHour.Name = "lblWeekHour";
-            this.lblWeekHour.Size = new System.Drawing.Size(223, 18);
-            this.lblWeekHour.TabIndex = 9;
-            this.lblWeekHour.Text = "Total hours consumed this week";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Tahoma", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
-            this.label1.Location = new System.Drawing.Point(16, 410);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(76, 18);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "26h 30m";
-            // 
             // btnMemo
             // 
             this.btnMemo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.btnMemo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnMemo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnMemo.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnMemo.ForeColor = System.Drawing.Color.White;
@@ -282,7 +262,7 @@
             this.lblSS.AutoSize = true;
             this.lblSS.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.lblSS.Font = new System.Drawing.Font("Tahoma", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSS.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(3)))), ((int)(((byte)(51)))));
+            this.lblSS.ForeColor = System.Drawing.Color.DarkSlateBlue;
             this.lblSS.Location = new System.Drawing.Point(158, 150);
             this.lblSS.Name = "lblSS";
             this.lblSS.Size = new System.Drawing.Size(45, 39);
@@ -306,12 +286,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(386, 473);
+            this.ClientSize = new System.Drawing.Size(386, 380);
             this.Controls.Add(this.lblSecond);
             this.Controls.Add(this.lblSS);
             this.Controls.Add(this.btnMemo);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.lblWeekHour);
             this.Controls.Add(this.lblMemo);
             this.Controls.Add(this.txtMemo);
             this.Controls.Add(this.btnStopTimer);
@@ -352,8 +330,6 @@
         private System.Windows.Forms.Button btnStopTimer;
         private System.Windows.Forms.TextBox txtMemo;
         private System.Windows.Forms.Label lblMemo;
-        private System.Windows.Forms.Label lblWeekHour;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnMemo;
         private System.Windows.Forms.PictureBox imgBack;
         private System.Windows.Forms.PictureBox picCross;
