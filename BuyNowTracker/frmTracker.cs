@@ -99,7 +99,7 @@ namespace BuyNowTracker
 
             timer1.Tick += timer1_Tick;
 
-            log.Info("Starting timer...");
+           // log.Info("Starting timer...");
 
             timer1.Start();
 
@@ -165,19 +165,27 @@ namespace BuyNowTracker
 
                     //log.Info("save screen ");
 
-
                     endTime = DateTime.Now;
-
-                    int _arrIndex = randomTime.FindIndex(a => a.Id == elapseindex);
 
                     LogActivity();
 
-                    if (_arrIndex < randomTime.Count - 1)
+                    int _arrIndex = randomTime.FindIndex(a => a.Id == elapseindex);
+
+                    if (_arrIndex < randomTime.Count)
                     {
-                        elapseTime = randomTime[_arrIndex + 1].Value;
-                        elapseindex = randomTime[_arrIndex + 1].Id;
-                        log.Info("with in range" + elapseTime.ToString());
-                        log.Info(_arrIndex.ToString());
+                        if (_arrIndex + 1 == randomTime.Count)
+                        {
+                            elapseTime = randomTime[0].Value;
+                            elapseindex = randomTime[0].Id;
+                        }
+                        else
+                        {
+                            elapseTime = randomTime[_arrIndex + 1].Value;
+                            elapseindex = randomTime[_arrIndex + 1].Id;
+                            ////log.Info("with in range" + elapseTime.ToString());
+
+                        }
+
                     }
                     else
                     {
