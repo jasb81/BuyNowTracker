@@ -59,11 +59,11 @@ namespace BuyNowTracker
 
         private void frmTracker_Load(object sender, EventArgs e)
         {
-            log.Info("Initializing Component...");
+            //log.Info("Initializing Component...");
 
             //lblStartTimer.Text = "Start Time " + startTime.ToString("dd-MMM-yyyy hh:mm tt");
 
-            log.Info("Initializing Classess...");
+            //log.Info("Initializing Classess...");
 
             lblTaskTltle.Text = taskObj.title;
             lblDescription.Text = taskObj.description;
@@ -79,13 +79,13 @@ namespace BuyNowTracker
 
             lastInput = new FindInputCtrl();
 
-            log.Info("Initializing Timer...");
+           // log.Info("Initializing Timer...");
 
-            randomTime.Add(new Idltime { Id = 1, Value = 2 });
+            randomTime.Add(new Idltime { Id = 1, Value = 3 });
             randomTime.Add(new Idltime { Id = 2, Value = 4 });
-            randomTime.Add(new Idltime { Id = 3, Value = 1 });
-            randomTime.Add(new Idltime { Id = 4, Value = 5 });
-            randomTime.Add(new Idltime { Id = 5, Value = 3 });
+            randomTime.Add(new Idltime { Id = 3, Value = 7 });
+            randomTime.Add(new Idltime { Id = 4, Value = 6 });
+            randomTime.Add(new Idltime { Id = 5, Value = 8 });
 
             elapseTime = randomTime[0].Value;
             elapseindex = randomTime[0].Value;
@@ -191,14 +191,14 @@ namespace BuyNowTracker
                     {
                         elapseTime = randomTime[0].Value;
                         elapseindex = randomTime[0].Id;
-                        log.Info("range started again" + elapseTime.ToString());
+                    //    log.Info("range started again" + elapseTime.ToString());
                     }
                     startTime = DateTime.Now.AddMinutes(elapseTime);
 
                 }
                 else
                 {
-                    log.Info("Time difference is less then ellapse time");
+                  //  log.Info("Time difference is less then ellapse time");
                 }        
             }
             catch (Exception ex)
@@ -324,7 +324,18 @@ namespace BuyNowTracker
             {
                 if (j["result"].ToString().ToLower() == "success")
                 {
-                    MessageBox.Show("Timer stopped!", "Info", MessageBoxButtons.OK);
+                    DialogResult dialog = new DialogResult();
+
+                    dialog = MessageBox.Show("Timer stopped!", "Info", MessageBoxButtons.OK);
+
+                    if(dialog == DialogResult.OK)
+                    {
+                        frmLogin td = new frmLogin();
+                        td.Show();
+                        this.Hide();
+
+                    }
+
                 }
                 else
                 {

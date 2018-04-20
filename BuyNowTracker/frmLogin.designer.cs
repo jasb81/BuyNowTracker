@@ -102,9 +102,9 @@
             this.lblStatus.AutoSize = true;
             this.lblStatus.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatus.ForeColor = System.Drawing.Color.Red;
-            this.lblStatus.Location = new System.Drawing.Point(122, 139);
+            this.lblStatus.Location = new System.Drawing.Point(144, 139);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(0, 16);
+            this.lblStatus.Size = new System.Drawing.Size(49, 16);
             this.lblStatus.TabIndex = 4;
             // 
             // chkRemember
