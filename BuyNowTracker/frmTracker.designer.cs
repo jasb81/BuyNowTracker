@@ -105,7 +105,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(386, 125);
+            this.panel1.Size = new System.Drawing.Size(386, 133);
             this.panel1.TabIndex = 1;
             // 
             // picCross
@@ -123,7 +123,7 @@
             // 
             this.imgBack.Cursor = System.Windows.Forms.Cursors.Hand;
             this.imgBack.Image = ((System.Drawing.Image)(resources.GetObject("imgBack.Image")));
-            this.imgBack.Location = new System.Drawing.Point(341, 75);
+            this.imgBack.Location = new System.Drawing.Point(341, 80);
             this.imgBack.Name = "imgBack";
             this.imgBack.Size = new System.Drawing.Size(33, 26);
             this.imgBack.TabIndex = 4;
@@ -133,7 +133,7 @@
             // label2
             // 
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label2.Location = new System.Drawing.Point(8, 114);
+            this.label2.Location = new System.Drawing.Point(8, 122);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(373, 2);
             this.label2.TabIndex = 2;
@@ -143,7 +143,7 @@
             this.lblDescription.AutoSize = true;
             this.lblDescription.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescription.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblDescription.Location = new System.Drawing.Point(6, 95);
+            this.lblDescription.Location = new System.Drawing.Point(6, 89);
             this.lblDescription.Name = "lblDescription";
             this.lblDescription.Size = new System.Drawing.Size(181, 16);
             this.lblDescription.TabIndex = 2;
@@ -154,7 +154,7 @@
             this.lblTaskTltle.AutoSize = true;
             this.lblTaskTltle.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTaskTltle.ForeColor = System.Drawing.Color.DarkSlateBlue;
-            this.lblTaskTltle.Location = new System.Drawing.Point(5, 75);
+            this.lblTaskTltle.Location = new System.Drawing.Point(5, 69);
             this.lblTaskTltle.Name = "lblTaskTltle";
             this.lblTaskTltle.Size = new System.Drawing.Size(85, 16);
             this.lblTaskTltle.TabIndex = 1;

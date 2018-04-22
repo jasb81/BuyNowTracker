@@ -66,7 +66,15 @@ namespace BuyNowTracker
             //log.Info("Initializing Classess...");
 
             lblTaskTltle.Text = taskObj.title;
-            lblDescription.Text = taskObj.description;
+            if (taskObj.description.Length > 57)
+            {
+                lblDescription.Text = taskObj.description.Substring(0, 57);
+                lblDescription.Text += Environment.NewLine + taskObj.description.Substring(lblDescription.Text.Length - 1);
+            }
+            else
+                lblDescription.Text = taskObj.description;
+
+
             lblUserName.Text = usrTracker.name;
 
             keyboard = new KeyboardInput();

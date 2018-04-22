@@ -104,12 +104,13 @@
             this.lblStatus.ForeColor = System.Drawing.Color.Red;
             this.lblStatus.Location = new System.Drawing.Point(144, 139);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(49, 16);
+            this.lblStatus.Size = new System.Drawing.Size(0, 16);
             this.lblStatus.TabIndex = 4;
             // 
             // chkRemember
             // 
             this.chkRemember.AutoSize = true;
+            this.chkRemember.Cursor = System.Windows.Forms.Cursors.Hand;
             this.chkRemember.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.chkRemember.FlatAppearance.BorderSize = 0;
             this.chkRemember.FlatAppearance.CheckedBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
