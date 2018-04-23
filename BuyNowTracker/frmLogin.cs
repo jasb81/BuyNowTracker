@@ -83,7 +83,7 @@ namespace BuyNowTracker
             catch (Exception ex)
             {
 
-                logger.Info("btnLogin_Click(object sender, EventArgs e) " + ex.Message);
+               // logger.Info("btnLogin_Click(object sender, EventArgs e) " + ex.Message);
             }
         }
 
