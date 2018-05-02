@@ -59,7 +59,7 @@
             this.btnLogin.Location = new System.Drawing.Point(79, 302);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(148, 38);
-            this.btnLogin.TabIndex = 1;
+            this.btnLogin.TabIndex = 4;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
@@ -91,7 +91,7 @@
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.txtUserName.Size = new System.Drawing.Size(325, 32);
-            this.txtUserName.TabIndex = 3;
+            this.txtUserName.TabIndex = 1;
             this.txtUserName.Text = "Your email address";
             this.txtUserName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtUserName.Enter += new System.EventHandler(this.txtUserName_Enter);
@@ -122,7 +122,7 @@
             this.chkRemember.Location = new System.Drawing.Point(81, 270);
             this.chkRemember.Name = "chkRemember";
             this.chkRemember.Size = new System.Drawing.Size(132, 22);
-            this.chkRemember.TabIndex = 5;
+            this.chkRemember.TabIndex = 3;
             this.chkRemember.Text = "Remember me";
             this.chkRemember.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.chkRemember.UseVisualStyleBackColor = true;
@@ -141,13 +141,14 @@
             this.btnClose.Location = new System.Drawing.Point(256, 302);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(148, 38);
-            this.btnClose.TabIndex = 6;
+            this.btnClose.TabIndex = 5;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // frmLogin
             // 
+            this.AcceptButton = this.btnLogin;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;

@@ -36,6 +36,11 @@ namespace BuyNowTracker
         private static int keyInputCount = 0;
         private static int mouseInputCount = 0;
 
+        private static DateTime IdlTimeStart;
+        private static DateTime? preIdlTimeStart;
+        private static Double TotalIdlTime = 0;
+
+
         List<Idltime> randomTime = new List<Idltime>();
 
         UserTask taskObj = null;
@@ -50,6 +55,7 @@ namespace BuyNowTracker
             taskObj = tsk;
             usrTracker = usr;
             _token = token;
+            TotalIdlTime = 0;
             _logActivityId = logActivityId;
 
             mouseInputCount=keyInputCount = 0;
@@ -64,6 +70,7 @@ namespace BuyNowTracker
             //lblStartTimer.Text = "Start Time " + startTime.ToString("dd-MMM-yyyy hh:mm tt");
 
             //log.Info("Initializing Classess...");
+            IdlTimeStart = DateTime.Now;
 
             lblTaskTltle.Text = taskObj.title;
             if (taskObj.description.Length > 57)
@@ -87,13 +94,15 @@ namespace BuyNowTracker
 
             lastInput = new FindInputCtrl();
 
-           // log.Info("Initializing Timer...");
+            // log.Info("Initializing Timer...");
 
             randomTime.Add(new Idltime { Id = 1, Value = 3 });
             randomTime.Add(new Idltime { Id = 2, Value = 4 });
-            randomTime.Add(new Idltime { Id = 3, Value = 7 });
-            randomTime.Add(new Idltime { Id = 4, Value = 6 });
-            randomTime.Add(new Idltime { Id = 5, Value = 8 });
+            randomTime.Add(new Idltime { Id = 3, Value = 3 });
+            randomTime.Add(new Idltime { Id = 4, Value = 5 });
+            randomTime.Add(new Idltime { Id = 5, Value = 4 });
+            randomTime.Add(new Idltime { Id = 6, Value = 3 });
+            randomTime.Add(new Idltime { Id = 7, Value = 7 });
 
             elapseTime = randomTime[0].Value;
             elapseindex = randomTime[0].Value;
@@ -207,7 +216,23 @@ namespace BuyNowTracker
                 else
                 {
                   //  log.Info("Time difference is less then ellapse time");
-                }        
+                }
+
+                lastInput = new FindInputCtrl();
+
+                TimeSpan minutes1 = new TimeSpan(0, lastInput.GetLastInputTime().Minute, lastInput.GetLastInputTime().Second);
+
+                TimeSpan minutes2 = new TimeSpan(0, IdlTimeStart.Minute, IdlTimeStart.Second);
+
+                double idltimeDifference = minutes2.TotalMinutes - minutes1.TotalMinutes;
+                if (Math.Round(idltimeDifference) >= Convert.ToDouble(1))
+                {
+                    IdlTimeStart = DateTime.Now;
+
+                    LogIdlTime(Math.Round(idltimeDifference).ToString());
+
+                }
+
             }
             catch (Exception ex)
             {
@@ -297,8 +322,7 @@ namespace BuyNowTracker
             }
           
         }
-
-        
+  
         private async void EndTimer(bool isBack)
         {
             this.Cursor = Cursors.WaitCursor;
@@ -454,10 +478,62 @@ namespace BuyNowTracker
 
         }
 
-    }
+        private async void LogIdlTime(string time)
+        {
+            this.Cursor = Cursors.WaitCursor;
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + _token);
+
+            var values = new Dictionary<string, string>
+                {
+                   { "action", "logidealtime" },
+
+                   { "timerid",  _logActivityId.ToString() },
+
+                   { "idealtime", time }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            this.Cursor = Cursors.Default;
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+            if (j["result"].ToString().ToLower() == "success")
+            {
+
+                //mouseInputCount = keyInputCount = 0;
+                //object value = ((Newtonsoft.Json.Linq.JValue)(j["data"][0]["stoptimer"])).Value;
+
+                //if (Convert.ToBoolean(value) == true)
+                //{
+                //    EndTimer(false);
+
+                //    timer1.Enabled = false;
+                //    timer1.Stop();
+
+                //}
+            }
+            else
+            {
+                MessageBox.Show(j["message"].ToString(), "Error", MessageBoxButtons.OK);
+            }
+
+        }
+}
 
 
-    public class Idltime
+public class Idltime
     {
         public int Id { get; set; }
         public int Value { get; set; }
