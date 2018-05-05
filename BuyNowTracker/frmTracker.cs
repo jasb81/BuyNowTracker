@@ -224,8 +224,12 @@ namespace BuyNowTracker
 
                 TimeSpan minutes2 = new TimeSpan(0, IdlTimeStart.Minute, IdlTimeStart.Second);
 
-                double idltimeDifference = minutes2.TotalMinutes - minutes1.TotalMinutes;
-                if (Math.Round(idltimeDifference) >= Convert.ToDouble(1))
+                double idltimeDifference = minutes1.TotalMinutes - minutes2.TotalMinutes;
+
+                Random r = new Random();
+                int randm =  r.Next(3, 8);
+
+                if (idltimeDifference >= randm) 
                 {
                     IdlTimeStart = DateTime.Now;
 

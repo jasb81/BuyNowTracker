@@ -40,8 +40,29 @@ namespace BuyNowTracker
             grdTaskList.CellClick +=
               new DataGridViewCellEventHandler(dataGridView1_CellClick);
 
+            grdTaskList.CellMouseMove += GrdTaskList_CellMouseMove;
+
+            grdTaskList.CellMouseLeave += GrdTaskList_CellMouseLeave;
+
+
             usr = u;
         }
+
+        private void GrdTaskList_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            grdTaskList.Cursor = Cursors.Default;
+        }
+
+        private void GrdTaskList_CellMouseMove(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex == 3)
+            {
+                grdTaskList.Cursor = Cursors.Hand;
+            }
+            else
+                grdTaskList.Cursor = Cursors.Default;
+        }
+
 
         void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -124,7 +145,7 @@ namespace BuyNowTracker
 
 
                 var values = new Dictionary<string, string>
-                { 
+                {
                    { "action", "tasks" },
 
                    { "userid",  userId.ToString() }
@@ -179,6 +200,7 @@ namespace BuyNowTracker
                 buttonColumn.HeaderCell.Style.BackColor = Color.Orange;
                 buttonColumn.CellTemplate.Style.Font = new Font(DataGridView.DefaultFont, FontStyle.Bold);
                 buttonColumn.UseColumnTextForButtonValue = true;
+                // buttonColumn.CellTemplate.Cu
 
                 grdTaskList.Columns[0].Visible = false;
                 grdTaskList.Columns[1].HeaderText = "Tasks";
@@ -195,7 +217,7 @@ namespace BuyNowTracker
                 grdTaskList.BorderStyle = BorderStyle.None;
                 //grdTaskList.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
                 grdTaskList.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-               // grdTaskList.DefaultCellStyle.SelectionBackColor = Color.;
+                // grdTaskList.DefaultCellStyle.SelectionBackColor = Color.;
                 //grdTaskList.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
                 grdTaskList.BackgroundColor = Color.White;
 

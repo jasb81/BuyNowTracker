@@ -19,7 +19,7 @@ namespace BuyNowTracker
             try
             {
 
-                memoryImage = new Bitmap(1000, 900); //1000,900
+                memoryImage = new Bitmap(1100, 900); //1000,900
 
                 Size s = new Size(memoryImage.Width, memoryImage.Height);
 

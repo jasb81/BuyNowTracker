@@ -145,7 +145,7 @@
             this.lblDescription.AutoSize = true;
             this.lblDescription.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescription.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblDescription.Location = new System.Drawing.Point(4, 6);
+            this.lblDescription.Location = new System.Drawing.Point(4, 4);
             this.lblDescription.MaximumSize = new System.Drawing.Size(270, 0);
             this.lblDescription.Name = "lblDescription";
             this.lblDescription.Size = new System.Drawing.Size(181, 16);
@@ -157,7 +157,7 @@
             this.lblTaskTltle.AutoSize = true;
             this.lblTaskTltle.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTaskTltle.ForeColor = System.Drawing.Color.DarkSlateBlue;
-            this.lblTaskTltle.Location = new System.Drawing.Point(12, 60);
+            this.lblTaskTltle.Location = new System.Drawing.Point(9, 63);
             this.lblTaskTltle.Name = "lblTaskTltle";
             this.lblTaskTltle.Size = new System.Drawing.Size(85, 16);
             this.lblTaskTltle.TabIndex = 1;
@@ -288,9 +288,9 @@
             // 
             this.panel2.AutoScroll = true;
             this.panel2.Controls.Add(this.lblDescription);
-            this.panel2.Location = new System.Drawing.Point(10, 82);
+            this.panel2.Location = new System.Drawing.Point(7, 83);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(305, 39);
+            this.panel2.Size = new System.Drawing.Size(305, 32);
             this.panel2.TabIndex = 9;
             // 
             // frmTracker
