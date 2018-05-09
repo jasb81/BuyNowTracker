@@ -8,10 +8,13 @@ using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using MaterialSkin;
+using MaterialSkin.Controls;
+
 
 namespace BuyNowTracker
 {
-    public partial class frmTracker : Form
+    public partial class frmTracker : MaterialForm
     {
         private static readonly log4net.ILog log =
                  log4net.LogManager.GetLogger(typeof(frmTracker));
@@ -61,7 +64,28 @@ namespace BuyNowTracker
             mouseInputCount=keyInputCount = 0;
 
             InitializeComponent();
+
+            this.FormClosing += frmTracker_FormClosing;
+
+            MaterialSkinManager materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+
+            // Configure color schema
+            materialSkinManager.ColorScheme = new ColorScheme(
+                Primary.Blue400, Primary.Blue500,
+                Primary.Blue500, Accent.LightBlue200,
+                TextShade.WHITE
+            );
+
+
         }
+
+        private void frmTracker_FormClosing(Object sender, FormClosingEventArgs e)
+        {
+            WindowState = FormWindowState.Minimized;
+        }
+
 
         private void frmTracker_Load(object sender, EventArgs e)
         {
@@ -82,7 +106,7 @@ namespace BuyNowTracker
                 lblDescription.Text = taskObj.description;
 
 
-            lblUserName.Text = usrTracker.name;
+            this.Text = usrTracker.name;
 
             keyboard = new KeyboardInput();
 
@@ -255,11 +279,6 @@ namespace BuyNowTracker
             timer1.Stop();
         }
 
-
-        private void btnClose_Click(object sender, EventArgs e)
-        {
-            WindowState = FormWindowState.Minimized;
-        }
         private string GetTime(string val)
         {
             if (val.Length == 1) return string.Format("0{0}", val);

@@ -68,8 +68,6 @@ namespace BuyNowTracker
                     else
                     {
                         Properties.Settings.Default.Reset();
-                        
-
                     }
 
                     LoginUser(userName, password);

@@ -1,4 +1,5 @@
-﻿namespace BuyNowTracker
+﻿
+namespace BuyNowTracker
 {
     partial class frmLogin
     {
@@ -36,10 +37,12 @@
             this.lblStatus = new System.Windows.Forms.Label();
             this.chkRemember = new System.Windows.Forms.CheckBox();
             this.btnClose = new System.Windows.Forms.Button();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panel1.BackgroundImage")));
             this.panel1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.panel1.Location = new System.Drawing.Point(154, 47);
@@ -110,6 +113,7 @@
             // chkRemember
             // 
             this.chkRemember.AutoSize = true;
+            this.chkRemember.BackColor = System.Drawing.Color.White;
             this.chkRemember.Cursor = System.Windows.Forms.Cursors.Hand;
             this.chkRemember.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
             this.chkRemember.FlatAppearance.BorderSize = 0;
@@ -125,7 +129,7 @@
             this.chkRemember.TabIndex = 3;
             this.chkRemember.Text = "Remember me";
             this.chkRemember.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.chkRemember.UseVisualStyleBackColor = true;
+            this.chkRemember.UseVisualStyleBackColor = false;
             // 
             // btnClose
             // 
@@ -146,14 +150,25 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // panel2
+            // 
+            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel2.BackColor = System.Drawing.SystemColors.Window;
+            this.panel2.Location = new System.Drawing.Point(1, 1);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(488, 389);
+            this.panel2.TabIndex = 6;
+            // 
             // frmLogin
             // 
             this.AcceptButton = this.btnLogin;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
+            this.AutoValidate = System.Windows.Forms.AutoValidate.EnableAllowFocusChange;
+            this.BackColor = System.Drawing.Color.Violet;
             this.ClientSize = new System.Drawing.Size(490, 391);
-            this.ControlBox = false;
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.chkRemember);
             this.Controls.Add(this.lblStatus);
@@ -161,10 +176,15 @@
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel2);
             this.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmLogin";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.frmLogin_Load);
             this.ResumeLayout(false);
@@ -181,5 +201,6 @@
         private System.Windows.Forms.Label lblStatus;
         private System.Windows.Forms.CheckBox chkRemember;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Panel panel2;
     }
 }

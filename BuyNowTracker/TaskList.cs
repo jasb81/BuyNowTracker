@@ -14,11 +14,13 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MaterialSkin;
+using MaterialSkin.Controls;
 
 
 namespace BuyNowTracker
 {
-    public partial class TaskList : Form
+    public partial class TaskList : MaterialForm
     {
         private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(typeof(TaskList));
         List<UserTask> LstUser = new List<UserTask>();
@@ -37,6 +39,22 @@ namespace BuyNowTracker
 
             InitializeComponent();
 
+            this.FormClosing += TaskList_FormClosing;
+
+
+            MaterialSkinManager materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+
+            // Configure color schema
+            materialSkinManager.ColorScheme = new ColorScheme(
+                Primary.Blue400, Primary.Blue500,
+                Primary.Blue500, Accent.LightBlue200,
+                TextShade.WHITE
+            );
+
+            
+
             grdTaskList.CellClick +=
               new DataGridViewCellEventHandler(dataGridView1_CellClick);
 
@@ -46,6 +64,19 @@ namespace BuyNowTracker
 
 
             usr = u;
+        }
+
+        private void TaskList_FormClosing(Object sender, FormClosingEventArgs e)
+        {
+            DialogResult dialog = new DialogResult();
+
+            dialog = MessageBox.Show("Do you want to exit?", "Confirm", MessageBoxButtons.YesNo);
+
+            if (dialog == DialogResult.Yes)
+            {
+                System.Environment.Exit(1);
+            }
+
         }
 
         private void GrdTaskList_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
@@ -133,7 +164,7 @@ namespace BuyNowTracker
             try
             {
 
-                this.Cursor = Cursors.Default;
+                this.Cursor = Cursors.WaitCursor;
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
@@ -238,23 +269,11 @@ namespace BuyNowTracker
             
             Current = this;
 
-            lblName.Text = usr.name;
+            TaskList.Current.Text = usr.name;
 
             ReadTasks((int)usr.uid);            
         }
 
-        private void picCross_Click(object sender, EventArgs e)
-        {
-            DialogResult dialog = new DialogResult();
-
-            dialog = MessageBox.Show("Do you want to exit?", "Confirm", MessageBoxButtons.YesNo);
-
-            if (dialog == DialogResult.Yes)
-            {
-                System.Environment.Exit(1);
-            }
-        }
- 
     }
 
     public class UserTask
