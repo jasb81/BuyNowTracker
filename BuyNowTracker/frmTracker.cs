@@ -482,8 +482,7 @@ namespace BuyNowTracker
             if (j["result"].ToString().ToLower() == "success")
             {
 
-                mouseInputCount = keyInputCount = 0;
-               object value =  ((Newtonsoft.Json.Linq.JValue)(j["data"][0]["stoptimer"])).Value;
+              object value =  ((Newtonsoft.Json.Linq.JValue)(j["data"][0]["stoptimer"])).Value;
 
                 if(Convert.ToBoolean(value) == true)
                 {
@@ -493,6 +492,8 @@ namespace BuyNowTracker
                     timer1.Stop();
 
                 }
+                mouseInputCount = keyInputCount = 0;
+
             }
             else
             {
@@ -553,10 +554,17 @@ namespace BuyNowTracker
             }
 
         }
-}
+
+        private void frmTracker_MouseHover(object sender, EventArgs e)
+        {
+            
+            
+            this.Cursor = Cursors.Hand;
+        }
+    }
 
 
-public class Idltime
+    public class Idltime
     {
         public int Id { get; set; }
         public int Value { get; set; }

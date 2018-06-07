@@ -274,6 +274,10 @@ namespace BuyNowTracker
             ReadTasks((int)usr.uid);            
         }
 
+        private void TaskList_MouseHover(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.Hand;
+        }
     }
 
     public class UserTask

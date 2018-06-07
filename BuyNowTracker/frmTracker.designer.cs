@@ -290,6 +290,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Buy Now Tracker";
             this.Load += new System.EventHandler(this.frmTracker_Load);
+            this.MouseHover += new System.EventHandler(this.frmTracker_MouseHover);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imgBack)).EndInit();
