@@ -42,6 +42,7 @@ namespace BuyNowTracker
         private static DateTime IdlTimeStart;
         private static DateTime? preIdlTimeStart;
         private static Double TotalIdlTime = 0;
+        bool isMemoAdded = false;
 
 
         List<Idltime> randomTime = new List<Idltime>();
@@ -60,6 +61,7 @@ namespace BuyNowTracker
             _token = token;
             TotalIdlTime = 0;
             _logActivityId = logActivityId;
+            isMemoAdded = false;
 
             mouseInputCount=keyInputCount = 0;
 
@@ -85,7 +87,6 @@ namespace BuyNowTracker
         {
             WindowState = FormWindowState.Minimized;
         }
-
 
         private void frmTracker_Load(object sender, EventArgs e)
         {
@@ -171,8 +172,7 @@ namespace BuyNowTracker
             mouseInputCount = mouseInputCount + 1;
         }
 
-
-        private void timer1_Tick(object sender, EventArgs e)
+       private void timer1_Tick(object sender, EventArgs e)
         {
             try
             {
@@ -267,16 +267,22 @@ namespace BuyNowTracker
                 log.Error(ex);
             }
         }
-
        
         private void btnEnd_Click(object sender, EventArgs e)
         {
-            mouseInputCount = keyInputCount = 0;
+            if (isMemoAdded)
+            {
+                mouseInputCount = keyInputCount = 0;
 
-            EndTimer(false);
+                EndTimer(false);
 
-            timer1.Enabled = false;
-            timer1.Stop();
+                timer1.Enabled = false;
+                timer1.Stop();
+            }
+            else
+            {
+                MessageBox.Show("Please add memo for this task before stop timer.", "Info", MessageBoxButtons.OK);
+            }
         }
 
         private string GetTime(string val)
@@ -294,15 +300,22 @@ namespace BuyNowTracker
 
         private void imgBack_Click(object sender, EventArgs e)
         {
-            EndTimer(true);
+            if (isMemoAdded)
+            {
+                EndTimer(true);
 
-            TaskList lst = new TaskList(usrTracker, _token);
+                TaskList lst = new TaskList(usrTracker, _token);
 
-            timer1.Enabled = false;
-            timer1.Stop();
+                timer1.Enabled = false;
+                timer1.Stop();
 
-            lst.Show();
-            this.Hide();
+                lst.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Please add memo for this task before go to tasklist.", "Info", MessageBoxButtons.OK);
+            }
         }
 
         private async void SaveScreenShot(byte[]  bytes)
@@ -388,13 +401,11 @@ namespace BuyNowTracker
                         frmLogin td = new frmLogin();
                         td.Show();
                         this.Hide();
-
                     }
-
                 }
                 else
                 {
-                    MessageBox.Show(j["message"].ToString(), "Error", MessageBoxButtons.OK);
+                    MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
                 }
             }
            
@@ -434,11 +445,12 @@ namespace BuyNowTracker
 
             if (j["result"].ToString().ToLower() == "success")
             {
+                isMemoAdded = true;
                 MessageBox.Show("Memo added", "Info", MessageBoxButtons.OK);
             }
             else
             {
-                MessageBox.Show(j["message"].ToString(), "Error", MessageBoxButtons.OK);
+                MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
             }
 
         }
@@ -497,7 +509,7 @@ namespace BuyNowTracker
             }
             else
             {
-                MessageBox.Show(j["message"].ToString(), "Error", MessageBoxButtons.OK);
+                MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
             }
 
         }
@@ -550,15 +562,13 @@ namespace BuyNowTracker
             }
             else
             {
-                MessageBox.Show(j["message"].ToString(), "Error", MessageBoxButtons.OK);
+                MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
             }
 
         }
 
         private void frmTracker_MouseHover(object sender, EventArgs e)
         {
-            
-            
             this.Cursor = Cursors.Hand;
         }
     }

@@ -157,6 +157,13 @@ namespace BuyNowTracker
 
 
             }
+            else
+            {
+
+                MessageBox.Show(j["messages"][0].ToString(), "Info", MessageBoxButtons.OK);
+
+
+            }
         }
 
         public async void ReadTasks(int userId)
