@@ -59,7 +59,11 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmTracker));
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.lblDescription = new System.Windows.Forms.Label();
+            this.imgBack = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.lblTaskTltle = new System.Windows.Forms.Label();
             this.lblhh = new System.Windows.Forms.Label();
             this.lblmm = new System.Windows.Forms.Label();
             this.lblhour = new System.Windows.Forms.Label();
@@ -70,13 +74,9 @@
             this.btnMemo = new System.Windows.Forms.Button();
             this.lblSS = new System.Windows.Forms.Label();
             this.lblSecond = new System.Windows.Forms.Label();
-            this.lblTaskTltle = new System.Windows.Forms.Label();
-            this.imgBack = new System.Windows.Forms.PictureBox();
-            this.lblDescription = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgBack)).BeginInit();
             this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgBack)).BeginInit();
             this.SuspendLayout();
             // 
             // timer1
@@ -94,6 +94,38 @@
             this.panel1.Size = new System.Drawing.Size(380, 85);
             this.panel1.TabIndex = 1;
             // 
+            // panel2
+            // 
+            this.panel2.AutoScroll = true;
+            this.panel2.Controls.Add(this.lblDescription);
+            this.panel2.Location = new System.Drawing.Point(7, 35);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(305, 32);
+            this.panel2.TabIndex = 9;
+            // 
+            // lblDescription
+            // 
+            this.lblDescription.AutoSize = true;
+            this.lblDescription.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescription.ForeColor = System.Drawing.Color.DarkGray;
+            this.lblDescription.Location = new System.Drawing.Point(4, 4);
+            this.lblDescription.MaximumSize = new System.Drawing.Size(270, 0);
+            this.lblDescription.Name = "lblDescription";
+            this.lblDescription.Size = new System.Drawing.Size(181, 16);
+            this.lblDescription.TabIndex = 2;
+            this.lblDescription.Text = "This is used to track user time";
+            // 
+            // imgBack
+            // 
+            this.imgBack.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.imgBack.Image = ((System.Drawing.Image)(resources.GetObject("imgBack.Image")));
+            this.imgBack.Location = new System.Drawing.Point(341, 40);
+            this.imgBack.Name = "imgBack";
+            this.imgBack.Size = new System.Drawing.Size(33, 26);
+            this.imgBack.TabIndex = 4;
+            this.imgBack.TabStop = false;
+            this.imgBack.Click += new System.EventHandler(this.imgBack_Click);
+            // 
             // label2
             // 
             this.label2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -101,6 +133,17 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(373, 2);
             this.label2.TabIndex = 2;
+            // 
+            // lblTaskTltle
+            // 
+            this.lblTaskTltle.AutoSize = true;
+            this.lblTaskTltle.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTaskTltle.ForeColor = System.Drawing.Color.DarkSlateBlue;
+            this.lblTaskTltle.Location = new System.Drawing.Point(9, 15);
+            this.lblTaskTltle.Name = "lblTaskTltle";
+            this.lblTaskTltle.Size = new System.Drawing.Size(85, 16);
+            this.lblTaskTltle.TabIndex = 1;
+            this.lblTaskTltle.Text = "Time Tracker";
             // 
             // lblhh
             // 
@@ -223,49 +266,6 @@
             this.lblSecond.TabIndex = 13;
             this.lblSecond.Text = "00";
             // 
-            // lblTaskTltle
-            // 
-            this.lblTaskTltle.AutoSize = true;
-            this.lblTaskTltle.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTaskTltle.ForeColor = System.Drawing.Color.DarkSlateBlue;
-            this.lblTaskTltle.Location = new System.Drawing.Point(9, 15);
-            this.lblTaskTltle.Name = "lblTaskTltle";
-            this.lblTaskTltle.Size = new System.Drawing.Size(85, 16);
-            this.lblTaskTltle.TabIndex = 1;
-            this.lblTaskTltle.Text = "Time Tracker";
-            // 
-            // imgBack
-            // 
-            this.imgBack.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.imgBack.Image = ((System.Drawing.Image)(resources.GetObject("imgBack.Image")));
-            this.imgBack.Location = new System.Drawing.Point(341, 40);
-            this.imgBack.Name = "imgBack";
-            this.imgBack.Size = new System.Drawing.Size(33, 26);
-            this.imgBack.TabIndex = 4;
-            this.imgBack.TabStop = false;
-            this.imgBack.Click += new System.EventHandler(this.imgBack_Click);
-            // 
-            // lblDescription
-            // 
-            this.lblDescription.AutoSize = true;
-            this.lblDescription.Font = new System.Drawing.Font("Tahoma", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescription.ForeColor = System.Drawing.Color.DarkGray;
-            this.lblDescription.Location = new System.Drawing.Point(4, 4);
-            this.lblDescription.MaximumSize = new System.Drawing.Size(270, 0);
-            this.lblDescription.Name = "lblDescription";
-            this.lblDescription.Size = new System.Drawing.Size(181, 16);
-            this.lblDescription.TabIndex = 2;
-            this.lblDescription.Text = "This is used to track user time";
-            // 
-            // panel2
-            // 
-            this.panel2.AutoScroll = true;
-            this.panel2.Controls.Add(this.lblDescription);
-            this.panel2.Location = new System.Drawing.Point(7, 35);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(305, 32);
-            this.panel2.TabIndex = 9;
-            // 
             // frmTracker
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -293,9 +293,9 @@
             this.MouseHover += new System.EventHandler(this.frmTracker_MouseHover);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.imgBack)).EndInit();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.imgBack)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

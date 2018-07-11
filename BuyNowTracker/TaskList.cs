@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
-
+using System.Globalization;
 
 namespace BuyNowTracker
 {
@@ -27,20 +27,53 @@ namespace BuyNowTracker
 
         public static TaskList Current;
 
-        User usr = new User();
-        string Token = string.Empty;
         bool isTimerStart = false;
-        int logActivityId = 0;
+
+        bool isFirstTaskClicked = false;
+
+        User usr = new User();
+        public string Token { get; set; }
+        public int LogActivityId { get; set; }
+        public int TaskId { get; set; }
+        public string TaskTitle { get; set; }
+
         UserTask usrTsk;
+
+        public long timeCount = 1;
+
+        private FindInputCtrl lastInput;
+
+        private KeyboardInput keyboard;
+
+        private MouseInput mouse;
+
+        private DateTime startTime;
+
+        private static int elapseTime = 0;
+
+        private static int elapseindex = 0;
+
+        private string buttonText;
+
+        private static int keyInputCount = 0;
+
+        private static int mouseInputCount = 0;
+
+        private static DateTime IdlTimeStart;
+
+        public int PrevTaskId { get; set; }
+        public int CurrentTaskId { get; set; }
+
+        List<Idltime> randomTime = new List<Idltime>();
 
         public TaskList(User u,string token)
         {
+            PrevTaskId = 0;
             Token = token;
 
             InitializeComponent();
 
             this.FormClosing += TaskList_FormClosing;
-
 
             MaterialSkinManager materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -54,7 +87,6 @@ namespace BuyNowTracker
             );
 
             
-
             grdTaskList.CellClick +=
               new DataGridViewCellEventHandler(dataGridView1_CellClick);
 
@@ -64,6 +96,203 @@ namespace BuyNowTracker
 
 
             usr = u;
+        }
+
+        private void TaskList_Load(object sender, EventArgs e)
+        {
+            mouseInputCount = keyInputCount = 0;
+
+            IdlTimeStart = DateTime.Now;
+
+            randomTime.Add(new Idltime { Id = 1, Value = 3 });
+            randomTime.Add(new Idltime { Id = 2, Value = 4 });
+            randomTime.Add(new Idltime { Id = 3, Value = 3 });
+            randomTime.Add(new Idltime { Id = 4, Value = 5 });
+            randomTime.Add(new Idltime { Id = 5, Value = 4 });
+            randomTime.Add(new Idltime { Id = 6, Value = 3 });
+            randomTime.Add(new Idltime { Id = 7, Value = 7 });
+
+            elapseTime = randomTime[0].Value;
+            elapseindex = randomTime[0].Value;
+
+            startTime = DateTime.Now.AddMinutes(elapseTime);
+
+            Current = this;
+
+            TaskList.Current.Text = usr.name;
+
+            keyboard = new KeyboardInput();
+
+            keyboard.KeyBoardKeyPressed += keyboard_KeyBoardKeyPressed;
+
+            mouse = new MouseInput();
+
+            mouse.MouseMoved += mouse_MouseMoved;
+
+            lastInput = new FindInputCtrl();
+
+
+            timer1 = new Timer();
+
+            timer1.Interval = 1000;
+
+            timer1.Tick += timer1_Tick;
+
+
+            ReadTasks((int)usr.uid);
+        }
+
+        void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            try
+            {
+                // Ignore clicks that are not on button cells. 
+                if (e.RowIndex < 0 || e.ColumnIndex !=
+                    grdTaskList.Columns["Starttask"].Index)
+                    return;
+
+                usrTsk = LstUser.Find(r => r.id == (int)grdTaskList.Rows[e.RowIndex].Cells["id"].Value);
+
+                if (CurrentTaskId == usrTsk.id)
+                    return;
+
+                if (PrevTaskId == 0)
+                    PrevTaskId = usrTsk.id;
+
+                if (PrevTaskId != usrTsk.id)
+                {
+
+                    if(CurrentTaskId > 0)
+                        PrevTaskId = CurrentTaskId;
+
+                    CurrentTaskId = usrTsk.id;
+                }
+
+
+                if (!isFirstTaskClicked)
+                {
+                    //DataGridViewButtonColumn c = (DataGridViewButtonColumn)grdTaskList.Columns[""];
+                    //c.FlatStyle = FlatStyle.Popup;
+                    //c.Text = "End Task";
+                    //c.DefaultCellStyle.ForeColor = Color.White;
+                    //c.DefaultCellStyle.BackColor = Color.Gray
+                        
+
+
+                    //DataGridViewButtonColumn buttonColumn =
+                    //new DataGridViewButtonColumn();
+
+                    //buttonColumn.Name = "Starttask";
+                    //buttonColumn.Text = "Start Task";
+
+                    //buttonColumn.FlatStyle = FlatStyle.Flat;
+                    //buttonColumn.CellTemplate.Style.BackColor = Color.Gray;
+                    //buttonColumn.CellTemplate.Style.ForeColor = Color.White;
+
+
+                    //grdTaskList.Columns[e.ColumnIndex].CellTemplate.
+
+                    StartTimer(usrTsk.id);
+
+                }
+                else
+                {
+
+                    frmSummary frmSum = new frmSummary();
+
+                    frmSum.lstTask = this;
+
+                    TaskId = usrTsk.id;
+
+                    TaskTitle = usrTsk.title;
+ 
+                    DialogResult result =  frmSum.ShowDialog();
+
+                    frmSum.Dispose();
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex.Message);
+            }
+        }
+
+        public void EndTaskTimer()
+        {
+            isFirstTaskClicked = false;
+            EndTimer(false);
+        }
+
+        void keyboard_KeyBoardKeyPressed(object sender, EventArgs e)
+        {
+            try
+            {
+                buttonText = sender.ToString();
+                keyInputCount = keyInputCount + 1;
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+
+        }
+
+        void mouse_MouseMoved(object sender, EventArgs e)
+        {
+            buttonText = sender.ToString();
+            mouseInputCount = mouseInputCount + 1;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                DateTime dtSecond = DateTime.Now;
+
+                timeCount++;
+
+                if (dtSecond > startTime)
+                {
+                    
+                    byte[] bytes = ScreenCapture.SaveScreen();
+
+                    SaveScreenShot(bytes);
+
+                    LogActivity();
+
+                    int _arrIndex = randomTime.FindIndex(a => a.Id == elapseindex);
+
+                    if (_arrIndex < randomTime.Count)
+                    {
+                        if (_arrIndex + 1 == randomTime.Count)
+                        {
+                            elapseTime = randomTime[0].Value;
+                            elapseindex = randomTime[0].Id;
+                        }
+                        else
+                        {
+                            elapseTime = randomTime[_arrIndex + 1].Value;
+                            elapseindex = randomTime[_arrIndex + 1].Id;
+                        }
+                    }
+                    else
+                    {
+                        elapseTime = randomTime[0].Value;
+                        elapseindex = randomTime[0].Id;
+                    }
+                    startTime = DateTime.Now.AddMinutes(elapseTime);
+                }
+                else
+                {
+                    //  log.Info("Time difference is less then ellapse time");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+            }
         }
 
         private void TaskList_FormClosing(Object sender, FormClosingEventArgs e)
@@ -94,76 +323,9 @@ namespace BuyNowTracker
                 grdTaskList.Cursor = Cursors.Default;
         }
 
-
-        void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        private void TaskList_MouseHover(object sender, EventArgs e)
         {
-            try
-            {
-                // Ignore clicks that are not on button cells. 
-                if (e.RowIndex < 0 || e.ColumnIndex !=
-                    grdTaskList.Columns["Starttask"].Index)
-                    return;
-
-
-                 usrTsk = LstUser.Find(r => r.id == (int)grdTaskList.Rows[e.RowIndex].Cells["id"].Value);
-
-                StartTimer(usrTsk.id);
-
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex.Message);
-            }
-        }
-
-
-        private async void StartTimer(int taskId)
-        {
-            this.Cursor = Cursors.WaitCursor;
-
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            string jsonString = string.Empty;
-
-            var client = new HttpClient();
-
-            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + Token);
-
-            var values = new Dictionary<string, string>
-                {
-                   { "action", "starttimer" },
-
-                   { "taskid",  taskId.ToString() }
-                };
-
-            var content = new FormUrlEncodedContent(values);
-
-            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
-
-            var responseString = await message.Content.ReadAsStringAsync();
-
-            this.Cursor = Cursors.Default;
-
-            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
-
-            if(j["result"].ToString().ToLower() == "success")
-            {
-                isTimerStart = true;
-                logActivityId =  Convert.ToInt32(j["data"]);
-
-                frmTracker td = new frmTracker(usrTsk, usr, Token, logActivityId);
-                td.Show();
-                this.Hide();
-
-
-            }
-            else
-            {
-
-                MessageBox.Show(j["messages"][0].ToString(), "Info", MessageBoxButtons.OK);
-
-
-            }
+            this.Cursor = Cursors.Hand;
         }
 
         public async void ReadTasks(int userId)
@@ -224,7 +386,8 @@ namespace BuyNowTracker
                     LstUser.Add(usrTask);
                 }
 
-                grdTaskList.DataSource = LstUser; DataGridViewButtonColumn buttonColumn =
+                grdTaskList.DataSource = LstUser;
+                DataGridViewButtonColumn buttonColumn =
                  new DataGridViewButtonColumn();
 
                 buttonColumn.Name = "Starttask";
@@ -271,20 +434,215 @@ namespace BuyNowTracker
             }
         }
 
-        private void TaskList_Load(object sender, EventArgs e)
+        private async void StartTimer(int taskId)
         {
+            this.Cursor = Cursors.WaitCursor;
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + Token);
+
+            var values = new Dictionary<string, string>
+                {
+                   { "action", "starttimer" },
+
+                   { "taskid",  taskId.ToString() }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            this.Cursor = Cursors.Default;
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+            if(j["result"].ToString().ToLower() == "success")
+            {
+                isTimerStart = isFirstTaskClicked = true;
+                MessageBox.Show("Your timer has been started for " + usrTsk.title + " task.", "Info", MessageBoxButtons.OK);
+
+                LogActivityId =  Convert.ToInt32(j["data"]);
+                timer1.Enabled = true;
+
+                timer1.Start();
+
+                //frmTracker td = new frmTracker(usrTsk, usr, Token, logActivityId);
+                //td.Show();
+                //this.Hide();
+
+
+            }
+            else
+            {
+                MessageBox.Show(j["messages"][0].ToString(), "Info", MessageBoxButtons.OK);
+            }
+        }
+
+        private async void SaveScreenShot(byte[] bytes)
+        {
+            this.Cursor = Cursors.WaitCursor;
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            var values = new Dictionary<string, string>
+            {
+                {"screenshot", Convert.ToBase64String(bytes)}
+            };
+
+            var str = JsonConvert.SerializeObject(values);
+
+            var content = new StringContent(str, Encoding.UTF8, "application/json");
+
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + Token);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php?action=savescreenshot&timerid=" + LogActivityId, content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            this.Cursor = Cursors.Default;
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+            if (j["result"].ToString().ToLower() == "success")
+            {
+                // MessageBox.Show("Screen shot saved", "Info", MessageBoxButtons.OK);
+
+            }
+            else
+            {
+                MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
+            }
+
+        }
+
+        private async void LogActivity()
+        {
+            this.Cursor = Cursors.WaitCursor;
+
+            Dictionary<string, object> dic = new Dictionary<string, object>();
+            dic.Add("MouseCount", mouseInputCount);
+            dic.Add("KeyStrokeCount", keyInputCount);
+
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + Token);
+
+            var values = new Dictionary<string, string>
+                {
+                   { "action", "logactivity" },
+
+                   { "timerid",  LogActivityId.ToString() },
+
+                   { "stats", JsonConvert.SerializeObject(dic) }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            this.Cursor = Cursors.Default;
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+            if (j["result"].ToString().ToLower() == "success")
+            {
+
+                object value = ((Newtonsoft.Json.Linq.JValue)(j["data"][0]["stoptimer"])).Value;
+
+                if (Convert.ToBoolean(value) == true)
+                {
+                    EndTimer(true);
+
+                    timer1.Enabled = false;
+                    timer1.Stop();
+
+                }
+                mouseInputCount = keyInputCount = 0;
+
+            }
+            else
+            {
+                MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
+            }
+
+        }
+
+        private async void EndTimer(bool islog)
+        {
+            this.Cursor = Cursors.WaitCursor;
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+            string jsonString = string.Empty;
+
+            var client = new HttpClient();
+
+            client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + Token);
+
+            var values = new Dictionary<string, string>
+                {
+                   { "action", "stoptimer" },
+
+                   { "timerid",  LogActivityId.ToString() }
+                };
+
+            var content = new FormUrlEncodedContent(values);
+
+            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+
+            var responseString = await message.Content.ReadAsStringAsync();
+
+            this.Cursor = Cursors.Default;
+
+            JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
+
+
+            if (j["result"].ToString().ToLower() == "success")
+            {
+                DialogResult dialog = new DialogResult();
+
+                if (islog)
+                {
+                    dialog = MessageBox.Show("Timer stopped!", "Info", MessageBoxButtons.OK);
+
+                    if (dialog == DialogResult.OK)
+                    {
+                        frmLogin td = new frmLogin();
+                        td.Show();
+                        this.Hide();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Timer stopped for " + usrTsk.title + " task.", "Info", MessageBoxButtons.OK);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
+            }
             
-            Current = this;
-
-            TaskList.Current.Text = usr.name;
-
-            ReadTasks((int)usr.uid);            
         }
 
-        private void TaskList_MouseHover(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.Hand;
-        }
     }
 
     public class UserTask
