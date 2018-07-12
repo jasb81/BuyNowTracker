@@ -86,8 +86,7 @@ namespace BuyNowTracker
 
             if (j["result"].ToString().ToLower() == "success")
             {
-                MessageBox.Show("Summary added", "Info", MessageBoxButtons.OK);
-
+                this.Close();
                 lstTask.EndTaskTimer();
 
             }

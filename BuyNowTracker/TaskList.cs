@@ -202,9 +202,9 @@ namespace BuyNowTracker
 
                     frmSum.lstTask = this;
 
-                    TaskId = usrTsk.id;
+                 //   TaskId = PrevTaskId;
 
-                    TaskTitle = usrTsk.title;
+                    //TaskTitle = usrTsk.title;
  
                     DialogResult result =  frmSum.ShowDialog();
 
@@ -222,6 +222,8 @@ namespace BuyNowTracker
         {
             isFirstTaskClicked = false;
             EndTimer(false);
+
+            StartTimer(CurrentTaskId);
         }
 
         void keyboard_KeyBoardKeyPressed(object sender, EventArgs e)
