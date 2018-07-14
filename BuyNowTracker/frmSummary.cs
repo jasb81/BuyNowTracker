@@ -21,16 +21,16 @@ namespace BuyNowTracker
     public partial class frmSummary : MaterialForm
     {
         public static frmSummary Current;
-        
+
         public TaskList lstTask;
 
+        public string TaskSummary { get; set; }
         public frmSummary()
         {
             InitializeComponent();
 
-           // this.Parent = lstTask;
+            // this.Parent = lstTask;
 
-            //frmSummary.Current.Text = title;
 
             MaterialSkinManager materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -42,8 +42,6 @@ namespace BuyNowTracker
                 Primary.Blue500, Accent.LightBlue200,
                 TextShade.WHITE
             );
-
-
 
         }
 
@@ -102,7 +100,7 @@ namespace BuyNowTracker
             SkipMemo();
         }
 
-        
+
         private async void SkipMemo()
         {
 
@@ -136,8 +134,8 @@ namespace BuyNowTracker
             if (j["result"].ToString().ToLower() == "success")
             {
                 this.Close();
-                
-                lstTask.EndTaskTimer();             
+
+                lstTask.EndTaskTimer();
             }
             else
             {
@@ -148,7 +146,8 @@ namespace BuyNowTracker
 
         private void frmSummary_Load(object sender, EventArgs e)
         {
-           // frmSummary.Current.Text = ((TaskList)lstTask).TaskTitle;
+
+            // frmSummary.Current.Text = ((TaskList)lstTask).TaskTitle;
 
         }
     }
