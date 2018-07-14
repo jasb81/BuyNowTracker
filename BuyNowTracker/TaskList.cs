@@ -1,3 +1,5 @@
+﻿
+
 ﻿using BuyNowTrackerBIZ;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,7 +24,7 @@ namespace BuyNowTracker
 {
     public partial class TaskList : MaterialForm
     {
-        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(typeof(TaskList));
+
         List<UserTask> LstUser = new List<UserTask>();
 
         public static TaskList Current;
@@ -66,7 +68,7 @@ namespace BuyNowTracker
 
         List<Idltime> randomTime = new List<Idltime>();
 
-        public TaskList(User u,string token)
+        public TaskList(User u, string token)
         {
             PrevTaskId = 0;
             Token = token;
@@ -86,7 +88,7 @@ namespace BuyNowTracker
                 TextShade.WHITE
             );
 
-            
+
             grdTaskList.CellClick +=
               new DataGridViewCellEventHandler(dataGridView1_CellClick);
 
@@ -146,6 +148,7 @@ namespace BuyNowTracker
         {
             try
             {
+                grdTaskList.ClearSelection();
                 // Ignore clicks that are not on button cells. 
                 if (e.RowIndex < 0 || e.ColumnIndex !=
                     grdTaskList.Columns["Starttask"].Index)
@@ -153,77 +156,80 @@ namespace BuyNowTracker
 
                 usrTsk = LstUser.Find(r => r.id == (int)grdTaskList.Rows[e.RowIndex].Cells["id"].Value);
 
-                if (CurrentTaskId == usrTsk.id)
-                    return;
+
+                if (grdTaskList.Rows[e.RowIndex].Cells["Starttask"].Value.Equals("Stop task"))
+                {
+                    DialogResult dialog = new DialogResult();
+
+
+                    dialog = MessageBox.Show("Are you sure you want to stop task", "Info", MessageBoxButtons.OK);
+
+                    if (dialog == DialogResult.OK)
+                    {
+                        ShowMemoDilog();
+                        PrevTaskId = 0;
+                        CurrentTaskId = 0;
+                        //EndTimer(false);
+                        return;
+                    }
+                }
+
 
                 if (PrevTaskId == 0)
                     PrevTaskId = usrTsk.id;
 
                 if (PrevTaskId != usrTsk.id)
                 {
-
-                    if(CurrentTaskId > 0)
-                        PrevTaskId = CurrentTaskId;
-
                     CurrentTaskId = usrTsk.id;
-                }
-
-
-                if (!isFirstTaskClicked)
-                {
-                    //DataGridViewButtonColumn c = (DataGridViewButtonColumn)grdTaskList.Columns[""];
-                    //c.FlatStyle = FlatStyle.Popup;
-                    //c.Text = "End Task";
-                    //c.DefaultCellStyle.ForeColor = Color.White;
-                    //c.DefaultCellStyle.BackColor = Color.Gray
-                        
-
-
-                    //DataGridViewButtonColumn buttonColumn =
-                    //new DataGridViewButtonColumn();
-
-                    //buttonColumn.Name = "Starttask";
-                    //buttonColumn.Text = "Start Task";
-
-                    //buttonColumn.FlatStyle = FlatStyle.Flat;
-                    //buttonColumn.CellTemplate.Style.BackColor = Color.Gray;
-                    //buttonColumn.CellTemplate.Style.ForeColor = Color.White;
-
-
-                    //grdTaskList.Columns[e.ColumnIndex].CellTemplate.
-
-                    StartTimer(usrTsk.id);
-
+                    ShowMemoDilog();
                 }
                 else
                 {
-
-                    frmSummary frmSum = new frmSummary();
-
-                    frmSum.lstTask = this;
-
-                 //   TaskId = PrevTaskId;
-
-                    //TaskTitle = usrTsk.title;
- 
-                    DialogResult result =  frmSum.ShowDialog();
-
-                    frmSum.Dispose();
+                    StartTimer(usrTsk.id, e.RowIndex);
                 }
-                
+
+
             }
             catch (Exception ex)
             {
-                logger.Error(ex.Message);
+                //logger.Error(ex.Message);
             }
         }
 
+        public void ShowMemoDilog()
+        {
+
+            frmSummary frmSum = new frmSummary();
+
+            frmSum.lstTask = this;
+
+
+
+            DialogResult result = frmSum.ShowDialog();
+
+            frmSum.Dispose();
+        }
         public void EndTaskTimer()
         {
-            isFirstTaskClicked = false;
+
             EndTimer(false);
 
-            StartTimer(CurrentTaskId);
+            int rowIndex = 0;
+
+            if (CurrentTaskId > 0)
+            {
+                for (int i = 0; i < grdTaskList.Rows.Count; i++)
+                {
+                    if (CurrentTaskId == ((int)grdTaskList.Rows[i].Cells["id"].Value))
+                    {
+                        rowIndex = i;
+                        break;
+                    }
+                }
+
+
+                StartTimer(CurrentTaskId, rowIndex);
+            }
         }
 
         void keyboard_KeyBoardKeyPressed(object sender, EventArgs e)
@@ -235,7 +241,7 @@ namespace BuyNowTracker
             }
             catch (Exception ex)
             {
-                logger.Error(ex);
+                //logger.Error(ex);
             }
 
         }
@@ -256,7 +262,7 @@ namespace BuyNowTracker
 
                 if (dtSecond > startTime)
                 {
-                    
+
                     byte[] bytes = ScreenCapture.SaveScreen();
 
                     SaveScreenShot(bytes);
@@ -402,8 +408,8 @@ namespace BuyNowTracker
                 buttonColumn.CellTemplate.Style.SelectionForeColor = Color.White;
                 buttonColumn.HeaderCell.Style.BackColor = Color.Orange;
                 buttonColumn.CellTemplate.Style.Font = new Font(DataGridView.DefaultFont, FontStyle.Bold);
-                buttonColumn.UseColumnTextForButtonValue = true;
-                // buttonColumn.CellTemplate.Cu
+                buttonColumn.UseColumnTextForButtonValue = false;
+
 
                 grdTaskList.Columns[0].Visible = false;
                 grdTaskList.Columns[1].HeaderText = "Tasks";
@@ -429,14 +435,59 @@ namespace BuyNowTracker
                 grdTaskList.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
                 grdTaskList.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
 
+                foreach (DataGridViewRow row in grdTaskList.Rows)
+                {
+                    DataGridViewCellStyle CellStyle = new DataGridViewCellStyle();
+                    CellStyle.BackColor = Color.Orange;
+                    CellStyle.ForeColor = Color.White;
+                    row.Cells["Starttask"].Value = "Start Task";
+                    row.Cells["Starttask"].Style = CellStyle;
+
+                }
+
             }
             catch (Exception ex)
             {
-                logger.Error(ex.Message);
+                //logger.Error(ex.Message);
             }
         }
 
-        private async void StartTimer(int taskId)
+        public async void GridColorChange(int RowIndex)
+        {
+            await Task.Run(() => ColorChange(RowIndex));
+        }
+
+        void ColorChange(int RowIndex)
+        {
+
+            if (RowIndex >= 0)
+            {
+                DataGridViewButtonCell cell = (DataGridViewButtonCell)grdTaskList.Rows[RowIndex].Cells["Starttask"];
+
+                DataGridViewCellStyle CellStyle = new DataGridViewCellStyle();
+                CellStyle.BackColor = Color.LightGray;
+                CellStyle.ForeColor = Color.White;
+                cell.Value = "Stop task";
+                cell.Style = CellStyle;
+            }
+
+            DataGridViewCellStyle CellStyle1 = new DataGridViewCellStyle();
+            CellStyle1.BackColor = Color.Orange;
+            CellStyle1.ForeColor = Color.White;
+
+
+            for (int i = 0; i < grdTaskList.Rows.Count; i++)
+            {
+                if (i == RowIndex) continue;
+
+                grdTaskList.Rows[i].Cells["Starttask"].Value = "Start task";
+                grdTaskList.Rows[i].Cells["Starttask"].Style = CellStyle1;
+
+            }
+
+        }
+
+        private async void StartTimer(int taskId, int rowIndex)
         {
             this.Cursor = Cursors.WaitCursor;
 
@@ -465,25 +516,23 @@ namespace BuyNowTracker
 
             JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
-            if(j["result"].ToString().ToLower() == "success")
+            if (j["result"].ToString().ToLower() == "success")
             {
                 isTimerStart = isFirstTaskClicked = true;
-                MessageBox.Show("Your timer has been started for " + usrTsk.title + " task.", "Info", MessageBoxButtons.OK);
+                GridColorChange(rowIndex);
+               // MessageBox.Show("Your timer has been started for " + usrTsk.title + " task.", "Info", MessageBoxButtons.OK);
 
-                LogActivityId =  Convert.ToInt32(j["data"]);
+                LogActivityId = Convert.ToInt32(j["data"]);
                 timer1.Enabled = true;
 
                 timer1.Start();
 
-                //frmTracker td = new frmTracker(usrTsk, usr, Token, logActivityId);
-                //td.Show();
-                //this.Hide();
-
-
             }
             else
             {
-                MessageBox.Show(j["messages"][0].ToString(), "Info", MessageBoxButtons.OK);
+                PrevTaskId = 0;
+                CurrentTaskId = 0;
+               MessageBox.Show(j["messages"][0].ToString(), "Info", MessageBoxButtons.OK);
             }
         }
 
@@ -632,17 +681,17 @@ namespace BuyNowTracker
                         this.Hide();
                     }
                 }
-                else
-                {
-                    MessageBox.Show("Timer stopped for " + usrTsk.title + " task.", "Info", MessageBoxButtons.OK);
-                }
+                //else
+                //{
+                //    MessageBox.Show("Timer stopped for " + usrTsk.title + " task.", "Info", MessageBoxButtons.OK);
+                //}
 
             }
             else
             {
                 MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
             }
-            
+            GridColorChange(-1);
         }
 
     }
