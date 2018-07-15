@@ -1,13 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BuyNowTrackerBIZ;
-using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json.Linq;
@@ -20,17 +13,16 @@ namespace BuyNowTracker
 {
     public partial class frmSummary : MaterialForm
     {
-        public static frmSummary Current;
-
+        private ToolTip toolText = null;
+        private bool anyButtonClicked = false;
         public TaskList lstTask;
-
         public string TaskSummary { get; set; }
+
         public frmSummary()
         {
             InitializeComponent();
 
-            // this.Parent = lstTask;
-
+            anyButtonClicked = false;
 
             MaterialSkinManager materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
@@ -42,17 +34,25 @@ namespace BuyNowTracker
                 Primary.Blue500, Accent.LightBlue200,
                 TextShade.WHITE
             );
-
         }
 
         private void btnMemo_Click(object sender, EventArgs e)
         {
+            if (txtMemo.Text == string.Empty)
+            {
+                pnlSummary.BackColor = Color.Red; 
+                return;
+            }
+            pnlSummary.BackColor = Color.White;
+
+            if(toolText != null)
+                toolText.Dispose();
+
             AddMemo();
         }
 
         private async void AddMemo()
         {
-
             this.Cursor = Cursors.WaitCursor;
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -84,6 +84,7 @@ namespace BuyNowTracker
 
             if (j["result"].ToString().ToLower() == "success")
             {
+                anyButtonClicked = true;
                 this.Close();
                 lstTask.EndTaskTimer();
 
@@ -97,11 +98,17 @@ namespace BuyNowTracker
 
         private void btnSkip_Click(object sender, EventArgs e)
         {
-            SkipMemo();
+            pnlSummary.BackColor = Color.White;
+
+            if (toolText != null)
+                toolText.Dispose();
+
+            
+
+            SkipMemo(true);
         }
 
-
-        private async void SkipMemo()
+        private async void SkipMemo(bool isButtonClicked)
         {
 
             this.Cursor = Cursors.WaitCursor;
@@ -133,7 +140,11 @@ namespace BuyNowTracker
 
             if (j["result"].ToString().ToLower() == "success")
             {
-                this.Close();
+                anyButtonClicked = true;
+
+                if (isButtonClicked)
+                    this.Close();
+
 
                 lstTask.EndTaskTimer();
             }
@@ -146,9 +157,34 @@ namespace BuyNowTracker
 
         private void frmSummary_Load(object sender, EventArgs e)
         {
+            this.Text = TaskSummary;
+        }
 
-            // frmSummary.Current.Text = ((TaskList)lstTask).TaskTitle;
+        private void txtMemo_MouseHover(object sender, EventArgs e)
+        {
 
+            if(pnlSummary.BackColor == Color.Red)
+            {
+                if (toolText != null)
+                    toolText.Dispose();
+
+                    toolText = new ToolTip();
+                toolText.InitialDelay = 0;
+                toolText.IsBalloon = true;
+                toolText.Show(string.Empty, txtMemo);
+                toolText.Show("Required", txtMemo, 0);
+            }
+        }
+
+        private void frmSummary_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            pnlSummary.BackColor = Color.White;
+
+            if (toolText != null)
+                toolText.Dispose();
+
+            if(!anyButtonClicked)
+                SkipMemo(false);
         }
     }
 }

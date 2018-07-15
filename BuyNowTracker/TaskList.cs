@@ -3,20 +3,16 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MaterialSkin;
 using MaterialSkin.Controls;
-using System.Globalization;
 
 namespace BuyNowTracker
 {
@@ -61,6 +57,8 @@ namespace BuyNowTracker
 
         private static DateTime IdlTimeStart;
 
+        private bool isSameTaskClicked = false;
+
         public int PrevTaskId { get; set; }
         public int CurrentTaskId { get; set; }
 
@@ -70,6 +68,7 @@ namespace BuyNowTracker
         {
             PrevTaskId = 0;
             Token = token;
+            isSameTaskClicked = false;
 
             InitializeComponent();
 
@@ -164,6 +163,7 @@ namespace BuyNowTracker
 
                     if (dialog == DialogResult.Yes)
                     {
+                        isSameTaskClicked = true;
                         ShowMemoDilog(grdTaskList.Rows[e.RowIndex].Cells[1].Value.ToString());
                         PrevTaskId = 0;
                         CurrentTaskId = 0;
@@ -182,14 +182,14 @@ namespace BuyNowTracker
 
                 if (PrevTaskId != usrTsk.id)
                 {
-
-
                     DialogResult dialog = new DialogResult();
 
                     dialog = MessageBox.Show("Starting new task will stop your current ruunig task. Are your sure?", "Confirm", MessageBoxButtons.YesNo);
 
                     if (dialog == DialogResult.Yes)
                     {
+                        if(CurrentTaskId > 0)
+                            PrevTaskId = CurrentTaskId;
                         CurrentTaskId = usrTsk.id;
 
                         string tskName = "";
@@ -209,6 +209,8 @@ namespace BuyNowTracker
                 {
                     this.Cursor = Cursors.WaitCursor;
                     StartTimer(usrTsk.id, e.RowIndex);
+
+                    WindowState = FormWindowState.Minimized;
                 }
 
 
@@ -248,9 +250,15 @@ namespace BuyNowTracker
                     }
                 }
 
+                System.Threading.Thread.Sleep(100);
 
-                StartTimer(CurrentTaskId, rowIndex);
+                if (!isSameTaskClicked)
+                    StartTimer(CurrentTaskId, rowIndex);
+
+                isSameTaskClicked = false;
             }
+            else
+                isSameTaskClicked = false;
         }
 
         void keyboard_KeyBoardKeyPressed(object sender, EventArgs e)
@@ -316,8 +324,6 @@ namespace BuyNowTracker
                 {
                     //  log.Info("Time difference is less then ellapse time");
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -326,15 +332,7 @@ namespace BuyNowTracker
 
         private void TaskList_FormClosing(Object sender, FormClosingEventArgs e)
         {
-            DialogResult dialog = new DialogResult();
-
-            dialog = MessageBox.Show("Do you want to exit?", "Confirm", MessageBoxButtons.YesNo);
-
-            if (dialog == DialogResult.Yes)
-            {
-                System.Environment.Exit(1);
-            }
-
+            WindowState = FormWindowState.Minimized;
         }
 
         private void GrdTaskList_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
@@ -475,13 +473,11 @@ namespace BuyNowTracker
 
         public async void GridColorChange(int RowIndex)
         {
-
             await Task.Run(() => ColorChange(RowIndex));
         }
 
         void ColorChange(int RowIndex)
         {
-
             if (RowIndex >= 0)
             {
                 DataGridViewButtonCell cell = (DataGridViewButtonCell)grdTaskList.Rows[RowIndex].Cells["Starttask"];
@@ -508,8 +504,6 @@ namespace BuyNowTracker
             }
 
         }
-
-
 
         private async void StartTimer(int taskId, int rowIndex)
         {
@@ -708,6 +702,11 @@ namespace BuyNowTracker
                         this.Hide();
                     }
                 }
+                else
+                {
+                    timer1.Enabled = false;
+                    timer1.Stop();
+                }
                 //else
                 //{
                 //    MessageBox.Show("Timer stopped for " + usrTsk.title + " task.", "Info", MessageBoxButtons.OK);
@@ -721,6 +720,10 @@ namespace BuyNowTracker
 
         }
 
+        private void grdTaskList_MouseHover(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class UserTask
