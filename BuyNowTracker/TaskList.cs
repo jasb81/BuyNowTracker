@@ -234,31 +234,8 @@ namespace BuyNowTracker
         }
         public void EndTaskTimer()
         {
-            GridColorChange(-1);
             EndTimer(false);
-
-            int rowIndex = 0;
-
-            if (CurrentTaskId > 0)
-            {
-                for (int i = 0; i < grdTaskList.Rows.Count; i++)
-                {
-                    if (CurrentTaskId == ((int)grdTaskList.Rows[i].Cells["id"].Value))
-                    {
-                        rowIndex = i;
-                        break;
-                    }
-                }
-
-                System.Threading.Thread.Sleep(100);
-
-                if (!isSameTaskClicked)
-                    StartTimer(CurrentTaskId, rowIndex);
-
-                isSameTaskClicked = false;
-            }
-            else
-                isSameTaskClicked = false;
+           
         }
 
         void keyboard_KeyBoardKeyPressed(object sender, EventArgs e)
@@ -706,6 +683,32 @@ namespace BuyNowTracker
                 {
                     timer1.Enabled = false;
                     timer1.Stop();
+
+                    GridColorChange(-1);
+
+                    int rowIndex = 0;
+
+                    if (CurrentTaskId > 0)
+                    {
+                        for (int i = 0; i < grdTaskList.Rows.Count; i++)
+                        {
+                            if (CurrentTaskId == ((int)grdTaskList.Rows[i].Cells["id"].Value))
+                            {
+                                rowIndex = i;
+                                break;
+                            }
+                        }
+
+
+                        if (!isSameTaskClicked)
+                            StartTimer(CurrentTaskId, rowIndex);
+
+                        isSameTaskClicked = false;
+                    }
+                    else
+                        isSameTaskClicked = false;
+
+
                 }
                 //else
                 //{
