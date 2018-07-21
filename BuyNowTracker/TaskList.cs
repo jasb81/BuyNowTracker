@@ -363,83 +363,91 @@ namespace BuyNowTracker
 
                 JObject j = (JObject)JsonConvert.DeserializeObject(responseString);
 
-                this.Cursor = Cursors.Default;
 
-                for (int i = 0; i < ((Newtonsoft.Json.Linq.JContainer)(j["data"])).Count; i++)
+                if (j["data"].Count() > 0)
                 {
-                    List<JToken> jt = j["data"][i].Select(jp => ((JProperty)jp)).ToList<JToken>();
-
-                    UserTask usrTask = new UserTask();
-
-                    foreach (JToken item in jt)
+                    for (int i = 0; i < ((Newtonsoft.Json.Linq.JContainer)(j["data"])).Count; i++)
                     {
-                        switch (((Newtonsoft.Json.Linq.JProperty)item).Name)
+                        List<JToken> jt = j["data"][i].Select(jp => ((JProperty)jp)).ToList<JToken>();
+
+                        UserTask usrTask = new UserTask();
+
+                        foreach (JToken item in jt)
                         {
-                            case "id":
-                                usrTask.id = (int)((Newtonsoft.Json.Linq.JProperty)item).Value;
-                                break;
-                            case "title":
-                                usrTask.title = ((Newtonsoft.Json.Linq.JProperty)item).Value.ToString();
-                                break;
-                            case "description":
-                                usrTask.description = ((Newtonsoft.Json.Linq.JProperty)item).Value.ToString();
-                                break;
+                            switch (((Newtonsoft.Json.Linq.JProperty)item).Name)
+                            {
+                                case "id":
+                                    usrTask.id = (int)((Newtonsoft.Json.Linq.JProperty)item).Value;
+                                    break;
+                                case "title":
+                                    usrTask.title = ((Newtonsoft.Json.Linq.JProperty)item).Value.ToString();
+                                    break;
+                                case "description":
+                                    usrTask.description = ((Newtonsoft.Json.Linq.JProperty)item).Value.ToString();
+                                    break;
+                            }
+                        }
+
+                        LstUser.Add(usrTask);
+
+                        grdTaskList.DataSource = LstUser;
+                        DataGridViewButtonColumn buttonColumn =
+                         new DataGridViewButtonColumn();
+
+                        buttonColumn.Name = "Starttask";
+                        buttonColumn.Text = "Start Task";
+
+                        buttonColumn.FlatStyle = FlatStyle.Flat;
+                        buttonColumn.CellTemplate.Style.BackColor = Color.Orange;
+                        buttonColumn.CellTemplate.Style.ForeColor = Color.White;
+                        buttonColumn.CellTemplate.Style.SelectionBackColor = Color.Orange;
+                        buttonColumn.CellTemplate.Style.SelectionForeColor = Color.White;
+                        buttonColumn.HeaderCell.Style.BackColor = Color.Orange;
+                        buttonColumn.CellTemplate.Style.Font = new Font(DataGridView.DefaultFont, FontStyle.Bold);
+                        buttonColumn.UseColumnTextForButtonValue = false;
+
+
+                        grdTaskList.Columns[0].Visible = false;
+                        grdTaskList.Columns[1].HeaderText = "Tasks";
+                        grdTaskList.Columns[1].HeaderCell.Style.BackColor = Color.Silver;
+                        grdTaskList.Columns[1].HeaderCell.Style.ForeColor = Color.White;
+                        grdTaskList.GridColor = Color.White;
+                        grdTaskList.Columns[2].Visible = false;
+                        grdTaskList.Columns.Add(buttonColumn);
+                        grdTaskList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                        grdTaskList.Columns[1].Width = 340;
+                        grdTaskList.ColumnHeadersVisible = false;
+
+
+                        grdTaskList.BorderStyle = BorderStyle.None;
+                        //grdTaskList.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
+                        grdTaskList.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+                        // grdTaskList.DefaultCellStyle.SelectionBackColor = Color.;
+                        //grdTaskList.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
+                        grdTaskList.BackgroundColor = Color.White;
+
+                        grdTaskList.EnableHeadersVisualStyles = false;
+                        grdTaskList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
+                        grdTaskList.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
+                        grdTaskList.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+
+                        foreach (DataGridViewRow row in grdTaskList.Rows)
+                        {
+                            DataGridViewCellStyle CellStyle = new DataGridViewCellStyle();
+                            CellStyle.BackColor = Color.Orange;
+                            CellStyle.ForeColor = Color.White;
+                            row.Cells["Starttask"].Value = "Start Task";
+                            row.Cells["Starttask"].Style = CellStyle;
+
                         }
                     }
-
-                    LstUser.Add(usrTask);
                 }
-
-                grdTaskList.DataSource = LstUser;
-                DataGridViewButtonColumn buttonColumn =
-                 new DataGridViewButtonColumn();
-
-                buttonColumn.Name = "Starttask";
-                buttonColumn.Text = "Start Task";
-
-                buttonColumn.FlatStyle = FlatStyle.Flat;
-                buttonColumn.CellTemplate.Style.BackColor = Color.Orange;
-                buttonColumn.CellTemplate.Style.ForeColor = Color.White;
-                buttonColumn.CellTemplate.Style.SelectionBackColor = Color.Orange;
-                buttonColumn.CellTemplate.Style.SelectionForeColor = Color.White;
-                buttonColumn.HeaderCell.Style.BackColor = Color.Orange;
-                buttonColumn.CellTemplate.Style.Font = new Font(DataGridView.DefaultFont, FontStyle.Bold);
-                buttonColumn.UseColumnTextForButtonValue = false;
-
-
-                grdTaskList.Columns[0].Visible = false;
-                grdTaskList.Columns[1].HeaderText = "Tasks";
-                grdTaskList.Columns[1].HeaderCell.Style.BackColor = Color.Silver;
-                grdTaskList.Columns[1].HeaderCell.Style.ForeColor = Color.White;
-                grdTaskList.GridColor = Color.White;
-                grdTaskList.Columns[2].Visible = false;
-                grdTaskList.Columns.Add(buttonColumn);
-                grdTaskList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-                grdTaskList.Columns[1].Width = 340;
-                grdTaskList.ColumnHeadersVisible = false;
-
-
-                grdTaskList.BorderStyle = BorderStyle.None;
-                //grdTaskList.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(238, 239, 249);
-                grdTaskList.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-                // grdTaskList.DefaultCellStyle.SelectionBackColor = Color.;
-                //grdTaskList.DefaultCellStyle.SelectionForeColor = Color.WhiteSmoke;
-                grdTaskList.BackgroundColor = Color.White;
-
-                grdTaskList.EnableHeadersVisualStyles = false;
-                grdTaskList.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-                grdTaskList.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(20, 25, 72);
-                grdTaskList.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-
-                foreach (DataGridViewRow row in grdTaskList.Rows)
+                else
                 {
-                    DataGridViewCellStyle CellStyle = new DataGridViewCellStyle();
-                    CellStyle.BackColor = Color.Orange;
-                    CellStyle.ForeColor = Color.White;
-                    row.Cells["Starttask"].Value = "Start Task";
-                    row.Cells["Starttask"].Style = CellStyle;
-
+                    MessageBox.Show("Their is no task assigned to you.");
                 }
+
+                this.Cursor = Cursors.Default;
 
             }
             catch (Exception ex)
@@ -484,6 +492,10 @@ namespace BuyNowTracker
 
         private async void StartTimer(int taskId, int rowIndex)
         {
+            try
+            {
+
+           
             this.Cursor = Cursors.WaitCursor;
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -532,10 +544,19 @@ namespace BuyNowTracker
             }
 
             this.Cursor = Cursors.Default;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private async void SaveScreenShot(byte[] bytes)
         {
+            try
+            {
+
+           
             this.Cursor = Cursors.WaitCursor;
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -571,6 +592,11 @@ namespace BuyNowTracker
             else
             {
                 MessageBox.Show(j["messages"][0].ToString(), "Error", MessageBoxButtons.OK);
+            }
+            }
+            catch (Exception ex)
+            {
+
             }
 
         }
