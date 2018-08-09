@@ -74,7 +74,7 @@ namespace BuyNowTracker
 
             var content = new FormUrlEncodedContent(values);
 
-            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+            HttpResponseMessage message = await client.PostAsync("https://www.buynowdepot.com/api.php", content);
 
             var responseString = await message.Content.ReadAsStringAsync();
 
@@ -130,7 +130,7 @@ namespace BuyNowTracker
 
             var content = new FormUrlEncodedContent(values);
 
-            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+            HttpResponseMessage message = await client.PostAsync("https://www.buynowdepot.com/api.php", content);
 
             var responseString = await message.Content.ReadAsStringAsync();
 

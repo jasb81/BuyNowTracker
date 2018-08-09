@@ -357,7 +357,7 @@ namespace BuyNowTracker
 
                 var content = new FormUrlEncodedContent(values);
 
-                HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+                HttpResponseMessage message = await client.PostAsync("https://www.buynowdepot.com/api.php", content);
 
                 var responseString = await message.Content.ReadAsStringAsync();
 
@@ -389,6 +389,9 @@ namespace BuyNowTracker
                         }
 
                         LstUser.Add(usrTask);
+                    }
+
+                        
 
                         grdTaskList.DataSource = LstUser;
                         DataGridViewButtonColumn buttonColumn =
@@ -440,7 +443,7 @@ namespace BuyNowTracker
                             row.Cells["Starttask"].Style = CellStyle;
 
                         }
-                    }
+                    
                 }
                 else
                 {
@@ -515,7 +518,7 @@ namespace BuyNowTracker
 
             var content = new FormUrlEncodedContent(values);
 
-            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+            HttpResponseMessage message = await client.PostAsync("https://www.buynowdepot.com/api.php", content);
 
             var responseString = await message.Content.ReadAsStringAsync();
 
@@ -576,7 +579,7 @@ namespace BuyNowTracker
 
             client.DefaultRequestHeaders.Add("Authorizations", "Bearer " + Token);
 
-            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php?action=savescreenshot&timerid=" + LogActivityId, content);
+            HttpResponseMessage message = await client.PostAsync("https://www.buynowdepot.com/api.php?action=savescreenshot&timerid=" + LogActivityId, content);
 
             var responseString = await message.Content.ReadAsStringAsync();
 
@@ -629,7 +632,7 @@ namespace BuyNowTracker
 
             var content = new FormUrlEncodedContent(values);
 
-            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+            HttpResponseMessage message = await client.PostAsync("https://www.buynowdepot.com/api.php", content);
 
             var responseString = await message.Content.ReadAsStringAsync();
 
@@ -681,7 +684,7 @@ namespace BuyNowTracker
 
             var content = new FormUrlEncodedContent(values);
 
-            HttpResponseMessage message = await client.PostAsync("https://buynowdepot.com/api.php", content);
+            HttpResponseMessage message = await client.PostAsync("https://www.buynowdepot.com/api.php", content);
 
             var responseString = await message.Content.ReadAsStringAsync();
 
