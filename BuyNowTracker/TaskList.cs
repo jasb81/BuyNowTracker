@@ -309,7 +309,8 @@ namespace BuyNowTracker
 
         private void TaskList_FormClosing(Object sender, FormClosingEventArgs e)
         {
-            WindowState = FormWindowState.Minimized;
+            e.Cancel = true;
+            this.WindowState = FormWindowState.Minimized;
         }
 
         private void GrdTaskList_CellMouseLeave(object sender, DataGridViewCellEventArgs e)
