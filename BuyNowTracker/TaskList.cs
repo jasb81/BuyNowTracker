@@ -100,6 +100,7 @@ namespace BuyNowTracker
         private void TaskList_Load(object sender, EventArgs e)
         {
             mouseInputCount = keyInputCount = 0;
+            isTimerStart = false;
 
             IdlTimeStart = DateTime.Now;
 
@@ -254,8 +255,11 @@ namespace BuyNowTracker
 
         void mouse_MouseMoved(object sender, EventArgs e)
         {
-            buttonText = sender.ToString();
-            mouseInputCount = mouseInputCount + 1;
+            if (isTimerStart == true)
+            {
+                buttonText = sender.ToString();
+                mouseInputCount = mouseInputCount + 1;
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
